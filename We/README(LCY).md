@@ -231,7 +231,7 @@
 
   
 
-## :pig2: 8월 14일 (금) 오늘 할 일 :eight_pointed_black_star:
+## :pig2: 8월 14일 (금) 오늘 한 일 :eight_pointed_black_star:
 
 * 발표 + 시연준비 : 시나리오 생각하기 - 발표 안함
 
@@ -247,4 +247,77 @@
   > * 회원가입 : 약관추가 
   > * 이메일 (회원가입시, 비밀번호 변경시)
 
-* 데이터베이스 데이터 관리하기!
+* 회원 정보 반환 수정정도..(아무것도 안함.. 실화냐)
+
+
+
+## :pig2: 8월 16일 (일) 오늘 한 일 :sun_with_face:
+
+* 카카오 로그인 api 사용해서 로그인 
+
+  > 1. redirect uri, 서비스 url 설정
+  >
+  > 2. 맨 처음 들어가는 링크 
+  >
+  >    > https://kauth.kakao.com/oauth/authorize?client_id=2e50ed388c52dc3ef17eb1c332285923&redirect_uri=https://i3a308.p.ssafy.io/jara/accounts/signin/kakao/access&response_type=code 
+  >
+  > 3. authorize_code 값을 받음 (함수 생성)
+  >
+  > 4. authorize_code 값을 사용해서 access_token, refresh_token을 받음
+  >
+  > 5. access_token으로 json 객체로 로그인 정보를 받음
+  >
+  > 6. json객체로 받은 값 -> 회원가입 및 로그인을 위해 매핑 추가, 함수 추가
+  >
+  > * 문제들
+  >   * 카카오 로그인 api가 친절하지 않음
+  >   * redirect uri 설정
+  >   * 스프링이 지맘대로임 됐다~ 안됐다~ 그래서 json 객체를 받아오는데 오래걸림
+
+
+
+## :pig2: 8월 17일 (월) 오늘 한 일 :full_moon:
+
+* 비밀번호 찾기 - 회원정보에 등록되지 않은 사람들한테도 이메일 발송 (해결)
+
+  > api 요청을 모두 pwd로 수정
+
+* 회원가입 인증 메일 - 인증은 되나 메일에 인증코드 값이 null로 감 (해결)
+
+* 올바른 DB 값 채우기
+
+
+
+
+## :pig2: 8월 18일 (화) 오늘 한 일 :fire:
+
+* 신고기능 - 신고자 id 값에 따른 신고자 nickname 전달
+
+* 최종 발표 회의
+
+
+
+## :pig2: 8월 19일 (수) 오늘 한 일 :droplet:
+
+* 회원가입 시 자동으로 관리자 계정 팔로우 하기
+
+* 코드 정리
+
+  > * 주석 달기
+  > * print 삭제
+  >
+  > * 안타까운 내 암호화 코드.. 여전히 주석처리 
+  > * 그 외에 불필요한 코드 삭제  - account, report 
+
+
+
+## :pig2: 8월 20일 (목) 오늘 한 일 :deciduous_tree:
+
+* ppt 완성
+
+
+
+## :pig2: 8월 21일 (금) 오늘 한 일 :eight_pointed_black_star:
+
+* ppt 에 영상 추가
+* 발표준비

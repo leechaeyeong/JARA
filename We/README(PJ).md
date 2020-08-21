@@ -1,20 +1,7 @@
 # Sub PJT III - 모바일 웹 디자인 및 기본 구성
 
 ## :bar_chart: 진척률(%)
-- 이슈 진행률 : 70%
-
-## :confused: 어려웠던 점 & 느낀 점 & 고민해볼 부분
-- (2020-08-03)
-    - 파일 업로드 구현을 하고 있는데, 이미지를 어떤식으로 서버에 저장할지 고민해봐야겠다.
-- (2020-08-04)
-    - firebase를 좀더 공부해봐야겠다.
-- (2020-08-05)
-    - 고민해볼 부분 
-        - Either --> 나열순, 최신순 외에 다른 것도 생각해보기
-        - 게시판 필터
-        - Barter --> 물건 팔렸는지 안팔렸는지 등의 세심한 부분 챙기기
-- (2020-08-06)
-    - ubuntu에 Let's Encrypt를 이용해 https를 적용하는데 하루를 다 써버렸다. 이거 때문에 오늘 개발을 거의 못했다. 정말 하루종일 계속 안되다가 겨우겨우 적용이 된 것 같은데, 이제는 잘 적용이 된건지도 모르겠다. :worried:
+- 이슈 진행률 : 100%
 
 ## :computer: Getting Started (개발환경 및 빌드 실행)
 
@@ -54,6 +41,7 @@ sudo date
 ### AWS & Docker
 - AWS 서버 접속
     - `ssh -i [pem key] ubuntu@[URL]`
+        - ex) `ssh -i "I3A308T.pem" ubuntu@i3a308.p.ssafy.io`
 - AWS 서버 timezone 설정 (맨 처음에 한 번만 설정)
 ```
 // 기존 시간 설정 제거
@@ -76,3 +64,33 @@ sudo date
 - Container가 꺼졌을 때 키는법
     - `docker start [Container 이름]`
     - ex) `docker start maria-db`
+
+### Nginx 사용 명령어
+```
+// 시작
+$ sudo service nginx start
+$ sudo systemctl start nginx
+$ sudo /etc/init.d/nginx start
+
+// 재시작
+$ sudo service nginx restart
+$ sudo systemctl restart nginx
+$ sudo /etc/init.d/nginx restart
+
+// 중지
+$ sudo service nginx stop
+$ sudo systemctl stop nginx
+$ sudo /etc/init.d/nginx stop
+
+// 상태
+$ sudo service nginx status
+$ sudo systemctl status nginx
+
+// 설정 reload
+$ sudo service nginx reload
+$ sudo systemctl reload nginx
+$ sudo nginx -s reload
+
+// configuration file syntax check
+$ sudo nginx -t
+```

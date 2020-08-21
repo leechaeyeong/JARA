@@ -24,11 +24,11 @@
 	</select>
 	
 	<!-- 이메일로 비밀번호 찾기(로그인 시) 비밀번호 암호화에 필요 -->
-	<select id="findPassword" resultType="java.lang.String">
+<!-- 	<select id="findPassword" resultType="java.lang.String">
 		SELECT password
 		FROM user
 		WHERE email=#{email}
-	</select>
+	</select> -->
 	
 	<!-- 닉네임(uid) / 이메일(email) 중복 체크 -->
 	<select id="duplicateCheck" resultType="java.lang.Integer">
@@ -58,12 +58,13 @@
 		WHERE code=#{code}
 	</update>
 	
-	<!-- 회원 정보 조회 -->
-	<select id="findAccount" resultType="com.ssafy.jara.dto.Account">
-		SELECT id, nickname, sex, birthday, location, bio, status, img_src
+	<!-- 모든 회원 정보(유저) 조회 -->
+	<select id="findAllAccount" resultType="com.ssafy.jara.dto.Account">
+		SELECT id, nickname, img_src
 		FROM user
-		WHERE id=#{id}
+		ORDER BY nickname
 	</select>
+	
 	
 	<!-- 회원 정보 조회 - 민감 정보 제외 -->
 	<select id="findPartAccount" resultType="com.ssafy.jara.dto.Account">
@@ -87,25 +88,11 @@
 		WHERE id=#{id}
 	</update>
 	
-	<!-- 모든 회원 정보(유저) 조회 -->
-	<select id="findAllAccount" resultType="com.ssafy.jara.dto.Account">
-		SELECT id, nickname, img_src
-		FROM user
-		ORDER BY nickname
-	</select>
-	
 	<!-- 회원 정보 삭제 -->
 	<delete id="deleteAccount">
 		DELETE
 		FROM user
 		WHERE id=#{id}
-	</delete>
-	
-	<!-- 회원 정보 삭제시 팔로우 테이블에서 삭제 -->
-	<delete id="deleteAllFollow">
-		DELETE 
-		FROM follow
-		WHERE following=#{following} or follower=#{follower}
 	</delete>
 	
 	<!-- 팔로우 추가 : 팔로우 요청 보내기 -->
@@ -121,11 +108,19 @@
 		WHERE follower=#{follower} AND following=#{following}
 	</update>
 	
-	<!-- 팔로우 리스트 조회 -->
-	<select id="findAllFollow" resultType="com.ssafy.jara.dto.Follow">
-		SELECT * 
-		FROM follow
+	<!-- 팔로우 여부 조회 -->
+	<select id="findFollow" resultType="java.lang.Integer">
+		SELECT count(*)
+		FROM follow 
+		WHERE follower=#{follower} and following=#{following} 
 	</select>
+	
+	<!-- 팔로우 취소 -->
+	<delete id="deleteFollow">
+		DELETE
+		FROM follow
+		WHERE follower=#{follower} and following=#{following} 
+	</delete>
 	
 	<!-- 팔로워 정보 조회 -->
 	<select id="findFollowing" resultType="java.lang.Integer">
@@ -141,19 +136,37 @@
 		WHERE follower=#{follower} and status=1
 	</select>
 	
-	<!-- 팔로우 여부 조회 -->
-	<select id="findFollow" resultType="java.lang.Integer">
-		SELECT count(*)
-		FROM follow 
-		WHERE follower=#{follower} and following=#{following} 
+	<!-- 이메일로 id 조회 -->
+	<select id="findIdByEmail" resultType="java.lang.Integer">
+		SELECT id
+		FROM user
+		WHERE email=#{email}
 	</select>
 	
-	<!-- 팔로우 취소 -->
-	<delete id="deleteFollow">
-		DELETE
-		FROM follow
-		WHERE follower=#{follower} and following=#{following} 
-	</delete>
+	<!-- 네이버 소셜 로그인 회원가입 (password는 랜덤값 삽입) -->
+	<insert id="insertNaverAccount" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO user (nickname, password, email, sex, status, access_token, refresh_token)
+		VALUES(#{nickname}, "jara0708", #{email}, #{sex}, 1, #{access_token}, #{refresh_token})
+	</insert>
 	
+	<!-- 네이버 소셜 로그인 처음인 경우 주소 따로 받아서 수정 -->
+	<update id="updateNaverAccount">
+		UPDATE user
+		SET location=#{location}
+		WHERE id=#{id}
+	</update>
+	
+	<!-- 카카오 소셜 로그인 회원가입 (password 랜덤값) -->
+	<insert id="insertKakaoAccount" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO user (nickname, password, email, sex, status, img_src, access_token, refresh_token)
+		VALUES(#{nickname}, "jara0708", #{email}, #{sex}, 1, #{img_src}, #{access_token}, #{refresh_token})
+	</insert>
+	
+	<!-- 카카오 소셜 로그인 처음인 경우 주소 따로 받아서 수정 -->
+ 	<update id="updateKakaoAccount">
+		UPDATE user
+		SET location=#{location}
+		WHERE id=#{id}
+	</update> 
 
 </mapper>

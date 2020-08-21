@@ -18,19 +18,23 @@ public class Tip {
 	
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
 	private Date updated_at;			// 수정일
+	
 	private int hits;					// 조회수
 	private int likes;					// 좋아요 수 
+	private int scraps;					// 스크랩 수
+	private int commentCount;			// 댓글 수
 	
 	private List<TipComment> comments;	// 댓글 목록
 	private List<Integer> likeAccounts;	// 좋아요 사용자 목록
-	
-	private String stored_file_name;	// 저장된 이미지 파일 이름
+	private List<Integer> scrapAccounts;// 스크랩 사용자 목록
 	
 	private String img_src;				// 파이어베이스 이미지 파일 경로 
 	
 	public Tip() {} 
 	
-	public Tip(int id, int writer, String title, String contents, int tag_id, Date created_at, Date updated_at, int hits, int likes, String stored_file_name, String img_src) {
+	public Tip(int id, int writer, String title, String contents, int tag_id, Date created_at, Date updated_at,
+			int hits, int likes, int scraps, int commentCount, List<TipComment> comments, List<Integer> likeAccounts,
+			List<Integer> scrapAccounts, String img_src) {
 		super();
 		this.id = id;
 		this.writer = writer;
@@ -41,7 +45,11 @@ public class Tip {
 		this.updated_at = updated_at;
 		this.hits = hits;
 		this.likes = likes;
-		this.stored_file_name = stored_file_name;
+		this.scraps = scraps;
+		this.commentCount = commentCount;
+		this.comments = comments;
+		this.likeAccounts = likeAccounts;
+		this.scrapAccounts = scrapAccounts;
 		this.img_src = img_src;
 	}
 
@@ -133,12 +141,12 @@ public class Tip {
 		this.likeAccounts = likeAccounts;
 	}
 	
-	public String getStored_file_name() {
-		return stored_file_name;
+	public List<Integer> getScrapAccounts() {
+		return scrapAccounts;
 	}
 
-	public void setStored_file_name(String stored_file_name) {
-		this.stored_file_name = stored_file_name;
+	public void setScrapAccounts(List<Integer> scrapAccounts) {
+		this.scrapAccounts = scrapAccounts;
 	}
 
 	public String getImg_src() {
@@ -149,12 +157,28 @@ public class Tip {
 		this.img_src = img_src;
 	}
 
+	public int getScraps() {
+		return scraps;
+	}
+
+	public void setScraps(int scraps) {
+		this.scraps = scraps;
+	}
+
+	public int getCommentCount() {
+		return commentCount;
+	}
+
+	public void setCommentCount(int commentCount) {
+		this.commentCount = commentCount;
+	}
+
 	@Override
 	public String toString() {
 		return "Tip [id=" + id + ", writer=" + writer + ", title=" + title + ", contents=" + contents + ", tag_id="
 				+ tag_id + ", created_at=" + created_at + ", updated_at=" + updated_at + ", hits=" + hits + ", likes="
-				+ likes + ", comments=" + comments + ", likeAccounts=" + likeAccounts + ", stored_file_name="
-				+ stored_file_name + ", img_src=" + img_src + "]";
+				+ likes + ", scraps=" + scraps + ", commentCount=" + commentCount + ", comments=" + comments
+				+ ", likeAccounts=" + likeAccounts + ", scrapAccounts=" + scrapAccounts + ", img_src=" + img_src + "]";
 	}
 
 }

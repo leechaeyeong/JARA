@@ -44,7 +44,6 @@ public class SocketHandler extends TextWebSocketHandler {
 		JSONObject obj = new JSONObject();
 		obj.put("type", "getId"); // 발신메시지의 타입
 		obj.put("sessionId", session.getId()); // 생성된 세션 Id
-		
 		session.sendMessage(new TextMessage(obj.toJSONString()));
 	}
 	

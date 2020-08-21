@@ -26,23 +26,6 @@ public class TipServiceImpl implements TipService {
 	}
 
 	@Override
-	public List<Tip> selectListTipTag(int tag_id) {
-		System.out.println("service : " + tag_id);
-		return tipDao.selectListTipTag(tag_id);
-	}
-
-	@Override
-	public List<Tip> selectListTipSearch(String searchWord) {
-		return tipDao.selectListTipSearch(searchWord); 
-	}
-	
-	@Override
-	public List<Tip> selectListTipTagSearch(HashMap<String, String> hashMap) {
-		return tipDao.selectListTipTagSearch(hashMap);
-	}
-
-
-	@Override
 	public Tip selectTip(int id) {
 		return tipDao.selectTip(id);
 	}
@@ -50,11 +33,6 @@ public class TipServiceImpl implements TipService {
 	@Override
 	public int updateTip(Tip tip) {
 		return tipDao.updateTip(tip);
-	}
-
-	@Override
-	public int updateTipHits(int id) {
-		return tipDao.updateTipHits(id);
 	}
 
 	@Override
@@ -83,18 +61,13 @@ public class TipServiceImpl implements TipService {
 	}
 
 	@Override
-	public int deleteTipLikes(int tip_id) {
-		return tipDao.deleteTipLikes(tip_id);
-	}
-
-	@Override
 	public int insertTipScrap(HashMap<String, Integer> hashMap) {
 		return tipDao.insertTipScrap(hashMap);
 	}
 
 	@Override
-	public List<Tip> selectListTipScrap(int user_id) {
-		return tipDao.selectListTipScrap(user_id);
+	public List<Tip> selectListTipUserScrap(int user_id) {
+		return tipDao.selectListTipUserScrap(user_id);
 	}
 
 	@Override
@@ -105,6 +78,11 @@ public class TipServiceImpl implements TipService {
 	@Override
 	public int updateTipImg(HashMap<String, Object> hashMap) {
 		return tipDao.updateTipImg(hashMap);
+	}
+	
+	@Override
+	public List<Integer> selectListTipScrap(int tip_id) {
+		return tipDao.selectListTipScrap(tip_id);
 	}
 
 }

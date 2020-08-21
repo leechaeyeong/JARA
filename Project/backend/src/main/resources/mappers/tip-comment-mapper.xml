@@ -37,10 +37,4 @@
 		WHERE id=#{id}
 	</delete>
 	
-	<!-- 팁 댓글 모두 삭제 -->
-	<delete id="deleteTipComments">
-		DELETE
-		FROM tip_comment
-		WHERE tip_id=#{tip_id}
-	</delete>
 </mapper>

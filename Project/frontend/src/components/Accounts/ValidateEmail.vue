@@ -1,9 +1,9 @@
 <template>
-  <v-container fluid mt-5>
-    <v-alert v-if="isError" type="error">
+  <v-container fluid mt-5 style="font-family: 'Handon3gyeopsal300g' !important;">
+    <v-alert v-if="isError" type="error" style="font-family: 'Handon3gyeopsal300g';">
       존재하지 않는 회원입니다. 이메일을 다시 한번 확인해 주세요.
     </v-alert>  
-    <div class="font-weight-bold text-sm-h3 text-h6">비밀번호를 잊으셨나요?<v-icon x-large class="ml-1">mdi-emoticon-cry-outline</v-icon></div>
+    <div class="font-weight-bold text-sm-h3 text-h6" style="font-family: 'Handon3gyeopsal600g' !important;">비밀번호를 잊으셨나요?<v-icon x-large class="ml-1">mdi-emoticon-cry-outline</v-icon></div>
     <v-form ref="form" v-model="isValid" class="px-3">
       <div class="font-weight-bold mt-5">이메일<v-icon class='ml-1'>mdi-email</v-icon></div>
       <v-text-field
@@ -60,8 +60,11 @@ export default {
     },
     sendEmail() {
       this.loader = 'loading'
-      axios.post(`${this.$store.state.api_server}/accounts/changepw`, '', { params: { email: this.authData.email }})
-        .then(() => alert('입력하신 이메일로 비밀번호 변경 인증 메일을 발송했습니다. 메일함을 확인해주세요.'))
+      axios.post(`${this.$store.state.api_server}/accounts/changepwd`, '', { params: { email: this.authData.email }})
+        .then(() => {
+          alert('입력하신 이메일로 비밀번호 변경 인증 메일을 발송했습니다. 메일함을 확인해주세요.')
+          this.$router.push('/accounts/setnewpwd')
+        })
         .catch(() => this.isError = !this.isError)
     }
   },

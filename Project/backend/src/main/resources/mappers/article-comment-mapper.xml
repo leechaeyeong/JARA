@@ -16,42 +16,31 @@
 		ORDER BY created_at DESC
 	</select>
 	
-	<!-- 해당하는 게시글 댓글 조회 -->
+	<!-- 게시글 댓글 조회 -->
 	<select id="selectArticleComment" resultType="com.ssafy.jara.dto.ArticleComment">
 		SELECT *
 		FROM article_comment
 		WHERE id=#{id}
 	</select>
 	
-	<!-- 해당하는 게시글 댓글 수정 -->
+	<!-- 게시글 댓글 수정 -->
 	<update id="updateArticleComment">
 		UPDATE article_comment
 		SET contents=#{contents}
 		WHERE id=#{id}
 	</update>
 	
-	<!-- 해당하는 게시글 댓글 삭제 -->
+	<!-- 게시글 댓글 삭제 -->
 	<delete id="deleteArticleComment">
 		DELETE
 		FROM article_comment
 		WHERE id=#{id}
 	</delete>
 	
-	<delete id="deleteArticleComments">
-		DELETE
-		FROM article_comment
-		WHERE article_id=#{article_id}
-	</delete>
-	
+	<!-- 게시글 댓글 숨김 -->
 	<update id="updateArticleCommentInvisible">
 		UPDATE article_comment
 		SET visible=0, updated_at=updated_at
-		WHERE id=#{id}
-	</update>
-	
-	<update id="updateArticleCommentVisible">
-		UPDATE article_comment
-		SET visible=1, updated_at=updated_at
 		WHERE id=#{id}
 	</update>
 	

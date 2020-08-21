@@ -19,11 +19,6 @@ public class ReportServiceImpl implements ReportService {
 	}
 	
 	@Override
-	public int countReport(String nickname) {
-		return reportDao.countReport(nickname);
-	}
-	
-	@Override
 	public int findAccusedId(String nickname) {
 		return reportDao.findAccusedId(nickname);
 	}
@@ -31,5 +26,10 @@ public class ReportServiceImpl implements ReportService {
 	@Override
 	public List<Report> selectListReport() {
 		return reportDao.selectListReport();
+	}
+	
+	@Override
+	public String findNickname(int reporter_id) {
+		return reportDao.findNickname(reporter_id);
 	}
 }

@@ -15,17 +15,19 @@
     "lodash": "^4.17.19",
     "moment": "^2.27.0",
     "node-sass": "^4.14.1",
-    "sass-loader": "^9.0.2",
+    "sass-loader": "^9.0.3",
+    "sockjs-client": "^1.5.0",
     "vue": "^2.6.11",
     "vue-check-view": "^0.3.0",
     "vue-cli": "^2.9.6",
     "vue-cookies": "^1.7.3",
     "vue-lodash": "^2.1.2",
-    "vue-router": "^3.3.4",
+    "vue-router": "^3.4.3",
     "vuefire": "^2.2.4",
     "vuelidate": "^0.7.5",
     "vuetify": "^2.3.5",
-    "vuex": "^3.5.1"
+    "vuex": "^3.5.1",
+    "webstomp-client": "^1.2.6"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.4.0",

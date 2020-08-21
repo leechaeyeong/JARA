@@ -22,7 +22,7 @@ public class JwtInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
             Object handler)
             throws Exception {
-        System.out.println(request.getMethod() + " :" + request.getServletPath());
+//        System.out.println(request.getMethod() + " :" + request.getServletPath());
         
         // option 요청은 바로 통과시켜주자.
         if (request.getMethod().equals("OPTIONS")) {

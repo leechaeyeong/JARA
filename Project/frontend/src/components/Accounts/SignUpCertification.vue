@@ -1,6 +1,6 @@
 <template>
-  <v-container fluid class="mt-5">
-    <div class="text-sm-h4 text-h6 font-weight-bold ml-5"><v-icon x-large class="mr-2">mdi-email</v-icon>이메일로 받은 인증번호를 입력해주세요.</div>
+  <v-container fluid class="mt-5" style="font-family: 'Handon3gyeopsal300g';">
+    <div class="text-sm-h4 text-h6 font-weight-bold mx-5" style="font-family: 'Handon3gyeopsal600g' !important;"><v-icon x-large class="mr-2">mdi-email</v-icon>이메일로 받은 인증번호를 입력해주세요.</div>
     <v-form
       v-model="isValid"
       ref="form"

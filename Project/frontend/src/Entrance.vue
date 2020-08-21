@@ -11,12 +11,14 @@
       <v-spacer></v-spacer>
       <div 
         id="jara"
-        class="mt-6 text-h1 font-weight-bold white--text"
+        class="mt-6 text-h2 text-sm-h1 font-weight-bold white--text"
+        style="font-family: 'GmarketSansBold' !important;"
       >JARA</div>
       <div 
         class="text-subtitle-1 white--text"
+        style="font-family: 'Handon3gyeopsal300g' !important;"
       >자취인의 라이프 플랫폼</div>
-      <v-btn class="ma-6 font-weight-bold" outlined color="white" @click="goToSignIn">로그인</v-btn>
+      <v-btn class="ma-6 font-weight-bold" outlined color="white" @click="goToSignIn" style="font-family: 'Handon3gyeopsal300g';">로그인</v-btn>
     </div>
   </v-container>
 </template>

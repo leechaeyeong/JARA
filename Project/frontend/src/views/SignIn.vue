@@ -3,10 +3,11 @@
     <v-alert v-if="isError" type="error">
       이메일 또는 비밀번호를 확인해주세요.
     </v-alert>
-    <div class="mt-5 font-weight-bold text-center text-sm-h1 text-h2 green--text text--darken-2">
-      JARA
+    <div class="mt-5 font-weight-bold text-center text-sm-h1 text-h2 green--text text--darken-2" style="font-family: 'GmarketSansBold' !important;">
+      J A R A
     </div>
-    <v-container mt-3 fluid>
+    <div class="text-center" style="font-family: 'Handon3gyeopsal300g';">#사회적 거리두기</div>
+    <v-container mt-3 fluid style="font-family: 'Handon3gyeopsal300g';">
       <v-form 
         ref="form"
         v-model="isValid"
@@ -43,14 +44,14 @@
         >로그인</v-btn>
       </v-form>
     </v-container>
-    <v-container fluid>
+    <v-container fluid style="font-family: 'Handon3gyeopsal300g';">
       <div class="my-5 d-flex">
         <div class="text grey--text">소셜 로그인</div>
         <v-divider class="align-self-center ml-2"></v-divider>
       </div>
       <div class="text-right">
-        <v-btn icon outlined><v-icon>mdi-google</v-icon></v-btn>
-        <v-btn icon oulined><v-icon></v-icon></v-btn> 
+        <v-btn icon :href="naverLoginURL" style="background-color: #1EC800;" class="mr-3"><v-icon x-large color="white">mdi-alpha-n</v-icon></v-btn>
+        <v-btn icon :href="kakaoLoginURL" style="background-color: #FDD835;"><v-icon color="brown darken-1">mdi-chat</v-icon></v-btn>  
       </div>
       <v-divider class="my-5"></v-divider>
       <div class="mt-5 d-flex align-center">
@@ -99,6 +100,8 @@ export default {
       },
       isValid: false,
       showPWD: false,
+      naverLoginURL: 'https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=y_9J6LuNu9tyN5tgnmEN&redirect_uri=https://i3a308.p.ssafy.io/jara/accounts/signin/naver/access&state=20200708',
+      kakaoLoginURL: 'https://kauth.kakao.com/oauth/authorize?client_id=2e50ed388c52dc3ef17eb1c332285923&redirect_uri=https://i3a308.p.ssafy.io/jara/accounts/signin/kakao/access&response_type=code'
     }
   },
   methods: {

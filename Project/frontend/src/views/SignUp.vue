@@ -1,9 +1,9 @@
 <template>
-  <v-container mt-5 fluid>
-    <v-alert v-if="isError" type="error">
+  <v-container mt-5 fluid style="font-family: 'Handon3gyeopsal300g' !important;">
+    <v-alert v-if="isError" type="error" style="font-family: 'Handon3gyeopsal600g' !important;">
       이미 존재하는 회원이거나 유효하지 않은 입력입니다.
     </v-alert>
-    <div class="mt-5 font-weight-bold text-center text-sm-h1 text-h2 green--text text--darken-2">
+    <div class="mt-5 font-weight-bold text-center text-sm-h1 text-h2 green--text text--darken-2" style="font-family: 'GmarketSansBold' !important;">
       JARA
     </div>
     <v-stepper v-model="present" class="mt-5">
@@ -24,7 +24,7 @@
           <v-card
             class="mb-12"
             color="grey lighten-4"
-            height="1000px"
+            height="870px"
           >
             <v-container fluid>
               <div class="d-flex align-center my-5">
@@ -38,7 +38,7 @@
                 <div class="font-weight-bold">JARA 이용 약관 동의</div>
                 <div class="green--text text--darken-1">(필수)</div>
               </div>
-              <div class="px-5">
+              <div class="px-3">
                 <v-textarea
                   :value="values.jara"
                   solo
@@ -49,23 +49,23 @@
                 <div class="font-weight-bold">개인정보 수집 및 이용에 대한 안내</div>
                 <div class="green--text text--darken-1">(필수)</div>
               </div>
-              <div class="px-5">
-              <v-text-field
+              <div class="px-3">
+                <v-textarea
                   :value="values.privacy"
                   solo
                   readonly
-                ></v-text-field>
+                ></v-textarea>
               </div>
               <div class="d-flex align-center my-5 px-3">
                 <div class="font-weight-bold">위치정보 이용약관 동의</div>
                 <div class="green--text text--darken-1">(필수)</div>
               </div>
-              <div class="px-5">
-                <v-text-field
+              <div class="px-3">
+                <v-textarea
                   :value="values.location"
                   solo
                   readonly
-                ></v-text-field>
+                ></v-textarea>
               </div>
             </v-container>
           </v-card>
@@ -140,7 +140,7 @@
                   v-model="signUpData.nickname"
                   :rules="[nickNameRules.required, nickNameRules.max]"
                   background-color="white"
-                  placeholder="닉네임을 입력해주세요. (특수문자는 사용할 수 없습니다.)"
+                  placeholder="닉네임을 입력해주세요."
                   outlined
                   color="green darken-2"
                   class="my-2"
@@ -242,21 +242,21 @@
             height="490px"
           >
             <v-container fluid>
-              <div class="text-center font-weight-bold text-sm-h3 text-h6 mt-5">
+              <div class="text-center font-weight-bold text-sm-h3 text-h6 mt-5" style="font-family: 'Handon3gyeopsal600g' !important;">
                 <v-icon color="red">mdi-party-popper</v-icon>
                 <v-icon color="yellow">mdi-party-popper</v-icon>
                 가입을 환영합니다
                 <v-icon color="green">mdi-party-popper</v-icon>
                 <v-icon color="blue">mdi-party-popper</v-icon>
               </div>
-              <div class="text-center mt-3 text-sm-h5 text-body-2">입력하신 이메일로 회원가입 인증 메일이 발송되었습니다
+              <div class="text-center mt-3 text-sm-h5 text-body-2" style="font-family: 'Handon3gyeopsal300g' !important;">입력하신 이메일로 회원가입 인증 메일이 발송되었습니다
                 <v-icon>mdi-email-send-outline</v-icon>
               </div>
-              <div class="text-center text-sm-h5 text-body-2">인증을 통해 회원가입을 완료해주세요
+              <div class="text-center text-sm-h5 text-body-2" style="font-family: 'Handon3gyeopsal300g' !important;">인증을 통해 회원가입을 완료해주세요
                 <v-icon>mdi-emoticon-excited</v-icon>
               </div>
               <div class="my-5 d-flex">
-                <div class="text grey--text">바로가기</div>
+                <div class="text grey--text" style="font-family: 'Handon3gyeopsal300g' !important;">바로가기</div>
                 <v-divider class="align-self-center ml-2"></v-divider>
               </div>
               <v-btn 
@@ -265,6 +265,7 @@
                 class="my-2 font-weight-bold text-h6"
                 color="white"
                 href="https://mail.daum.net/login?url=https%3A%2F%2Fmail.daum.net%2F"
+                style="font-family: 'Handon3gyeopsal600g' !important;"
               >
                 <div class="blue--text text--darken-1">d</div>
                 <div class="light-green--text text--lighten-1">a</div>
@@ -276,6 +277,7 @@
                 class="my-2 font-weight-bold text-h6" 
                 color="white"
                 href="https://accounts.google.com/ServiceLogin/signinchooser?service=mail&passive=true&rm=false&continue=https%3A%2F%2Fmail.google.com%2Fmail%2F%3Ftab%3Dwm%26ogbl&scc=1&ltmpl=default&ltmplcache=2&emr=1&osid=1&flowName=GlifWebSignIn&flowEntry=ServiceLogin"
+                style="font-family: 'Handon3gyeopsal600g' !important;"
               >
                 <div class="blue--text text--darken-1">g</div>
                 <div class="red--text">o</div>
@@ -290,6 +292,7 @@
                 color="red"
                 class="my-2 font-weight-bold white--text text-h6"
                 href="http://home.mail.nate.com/login/login.html?s=mail&redirect=http%3A%2F%2Fmail3.nate.com%2F#index"
+                style="font-family: 'Handon3gyeopsal600g' !important;"
               >nate</v-btn>
               <v-btn 
                 block 
@@ -297,6 +300,7 @@
                 class="my-2 font-weight-bold white--text text-h6" 
                 color="#19CD61"
                 href="https://nid.naver.com/nidlogin.login?url=http%3A%2F%2Fmail.naver.com%2F"
+                style="font-family: 'Handon3gyeopsal600g' !important;"
               >naver</v-btn>
             </v-container>
           </v-card>
@@ -316,9 +320,9 @@ export default {
     return {
       present: 1,
       values: {
-        jara: 'JARA 서비스를 이용해 주셔서 감사합니다. SNS 서비스를 제공하는 JARA가 아래 준비한 약관을 읽어주시면 감사드리겠습니다. \n 계정 관련 \n JARA는 이메일로 계정을 생성하실 수 있습니다. 다만, 실제 이메일의 소유주임을 확인하기 위해서 가입 당시 인증 절차를 거치게 됩니다. 아래의 경우에는 계정 생성을 승인하지 않을 수 있습니다. \n 다른 사람의 개인정보를 이용하여 계정을 생성하려 한 경우 \n 계정 생성시 필요한 정보를 입력하지 않거나 허위 정보를 입력한 경우\n JARA가 과거에 운영원칙 또는 법률 위반 등의 정당한 사유로 해당 계정을 삭제 또는 징계한 경우\n 계정은 본인만 이용할 수 있고, 다른 사람에게 이용을 허락하거나 양도할 수 없습니다. 사용자는 계정과 관련된 정보, 즉 프로필 사진이나 닉네임 등을 수정할 수 있습니다. 이메일이 바뀐 경우에는 서비스 내 설정 메뉴나 고객센터 문의를 통해 새 이메일로 인증절차를 걸쳐 수정할 수 있습니다.',
-        privacy: '',
-        location: '',
+        jara: 'JARA 서비스를 이용해 주셔서 감사합니다.\n\nSNS 서비스를 제공하는 JARA가 아래 준비한 약관을 읽어주시면 감사드리겠습니다.\n\n계정 관련\nJARA는 이메일로 계정을 생성하실 수 있습니다. 다만, 실제 이메일의 소유주임을 확인하기 위해서 가입 당시 인증 절차를 거치게 됩니다. 아래의 경우에는 계정 생성을 승인하지 않을 수 있습니다.\n다른 사람의 개인정보를 이용하여 계정을 생성하려 한 경우\n계정 생성시 필요한 정보를 입력하지 않거나 허위 정보를 입력한 경우\nJARA가 과거에 운영원칙 또는 법률 위반 등의 정당한 사유로 해당 계정을 삭제 또는 징계한 경우\n계정은 본인만 이용할 수 있고, 다른 사람에게 이용을 허락하거나 양도할 수 없습니다. 사용자는 계정과 관련된 정보, 즉 프로필 사진이나 닉네임 등을 수정할 수 있습니다. 이메일이 바뀐 경우에는 서비스 내 설정 메뉴나 고객센터 문의를 통해 새 이메일로 인증절차를 걸쳐 수정할 수 있습니다.',
+        privacy: 'JARA는 서비스 제공을 위한 필요 최소한의 개인정보를 수집하고 있습니다.\n\n회원 가입 시 또는 서비스 이용 과정에서 홈페이지 또는 개별 어플리케이션이나 프로그램 등을 통해 아래와 같은 서비스 제공을 위해 필요한 최소한의 개인정보를 수집하고 있습니다.\n\n이메일, 비밀번호, 닉네임, 프로필사진, 주소, 생년월일, 성별',
+        location: '위치정보 이용약관에 동의하시면, 위치를 활용한 날씨 정보를 제공하는 JARA의 위치기반 서비스를 이용하실 수 있습니다.\n\nJARA가 제공하는 서비스의 종류, 세부 내용, 이용 요금은 아래와 같습니다.\n1.종류 : SNS\n2.서비스명 : JARA\n3.설명 : 자취 인구(1인 가구)를 위한 SNS\n4.위치정보 이용 목적: 날씨 정보 제공\n5.이용 요금 : 무료',
       },
       items: [
         { text: '남성', value: 0 },

@@ -35,24 +35,11 @@ public class ArticleCommentController {
 		articleComment.setArticle_id(article_id);
 		
 		if(articleCommentService.insertArticleComment(articleComment) > 0) {
-			
 			return new ResponseEntity<ArticleComment>(articleCommentService.selectArticleComment(articleComment.getId()), HttpStatus.OK);
 		}
 		
 		return new ResponseEntity<ArticleComment>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-	
-//	@ApiOperation(value = "게시글 전체 댓글 조회", response = List.class)
-//	@GetMapping("/{article_id}/comments")
-//	private ResponseEntity<List<ArticleComment>> selectArticleComments(@PathVariable("article_id") int article_id) {
-//		return new ResponseEntity<List<ArticleComment>>(articleCommentService.selectArticleComments(article_id), HttpStatus.OK);
-//	}
-	
-//	@ApiOperation(value = "게시글 댓글 조회", response = ArticleComment.class)
-//	@GetMapping("/{article_id}/comments/{id}")
-//	private ResponseEntity<ArticleComment> selectArticleComment(@PathVariable("id") int id) {
-//		return new ResponseEntity<ArticleComment>(articleCommentService.selectArticleComment(id), HttpStatus.OK);
-//	}
 	
 	@ApiOperation(value = "게시글 댓글 수정", response = String.class)
 	@PutMapping("/{article_id}/comments/{id}")
@@ -95,13 +82,4 @@ public class ArticleCommentController {
 		return new ResponseEntity<String>("fail", HttpStatus.BAD_REQUEST);
 	}
 	
-	@ApiOperation(value = "게시글 댓글 보임", response = String.class)
-	@PutMapping("/{article_id}/comments/{id}/visible")
-	private ResponseEntity<String> updateArticleCommentVisible(@PathVariable("id") int id) {
-		if(articleCommentService.updateArticleCommentVisible(id) > 0) {
-			return new ResponseEntity<String>("success", HttpStatus.OK);
-		}
-		
-		return new ResponseEntity<String>("fail", HttpStatus.BAD_REQUEST);
-	}
 }

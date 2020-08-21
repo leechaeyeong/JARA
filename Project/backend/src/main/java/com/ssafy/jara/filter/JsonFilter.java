@@ -57,8 +57,6 @@ public class JsonFilter extends OncePerRequestFilter {
 						if(data < 0) 
 							break;
 						
-						log.info("입력된 data : " + data);
-						
 						sb.append((char) data);
 					}
 					
@@ -107,8 +105,6 @@ public class JsonFilter extends OncePerRequestFilter {
 					input = input.replaceAll(s, StringEscapeUtils.escapeHtml4(s));
 				} 
 			}
-			
-			log.info("JsonFilter 변환 : " + input);
 			
 			return input;
 		}

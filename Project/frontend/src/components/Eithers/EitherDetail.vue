@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container fluid style="font-family: 'Handon3gyeopsal300g';">
     <div class="mt-5 text-right">
       <v-chip
         v-if="either.status==0"
@@ -20,7 +20,7 @@
     </div>
     <div class="d-flex justify-space-between align-center">
       <div>
-        <v-btn text class="pa-0 font-weight-bold text-sm-h5 text-h6" @click="goToUser" x-large>
+        <v-btn text class="pa-0 font-weight-bold text-sm-h5 text-h6" @click="goToUser" x-large style="font-family: 'Handon3gyeopsal600g' !important;">
           <v-icon x-large v-if="psas[either.writer]==null">mdi-account-circle</v-icon>
           <v-avatar v-else><img :src="psas[either.writer]"></v-avatar>
           {{ users[either.writer] }}</v-btn>
@@ -43,18 +43,18 @@
               :key="idx"
               @click="completeOrDelete(idx)"
             >
-              <v-list-item-title>{{ menu.title }}</v-list-item-title>
+              <v-list-item-title style="font-family: 'Handon3gyeopsal300g';">{{ menu.title }}</v-list-item-title>
             </v-list-item>
           </v-list>
         </v-menu>
       </div>
     </div>
-    <div class="mt-5 ml-5 text-h6">{{ either.question }}</div>
-    <v-row v-if="!isVoted" justify-space-around class="mt-5 px-5 text-center white--text text-sm-h3 text-h6 font-weight-bold">
+    <div class="mt-5 ml-5 text-h6" style="font-family: 'Handon3gyeopsal300g' !important;">{{ either.question }}</div>
+    <v-row v-if="!isVoted" justify-space-around class="mt-5 px-5 text-center white--text text-sm-h3 text-h6 font-weight-bold" style="font-family: 'Handon3gyeopsal600g' !important;">
       <v-col @click="pick(0)" class="red darken-1 rounded" id="A">{{ either.choiceA }}</v-col>
       <v-col @click="pick(1)" class="blue darken-2 rounded" id="B">{{ either.choiceB }}</v-col>
     </v-row>
-    <v-row v-else justify-space-around class="mt-5 px-5 text-center white--text text-sm-h3 text-h6 font-weight-bold">
+    <v-row v-else justify-space-around class="mt-5 px-5 text-center white--text text-sm-h3 text-h6 font-weight-bold" style="font-family: 'Handon3gyeopsal600g' !important;">
       <v-col v-if="choiceA.includes(userInfo.id)" class="red darken-4 rounded">{{ either.choiceA }}<v-icon class="ml-2" x-large>mdi-check-bold</v-icon></v-col>
       <v-col v-else class="red darken-1 rounded">{{ either.choiceA }}</v-col>
       <v-col v-if="choiceB.includes(userInfo.id)" class="blue darken-4 rounded">{{ either.choiceB }}<v-icon class="ml-2" x-large>mdi-check-bold</v-icon></v-col>
@@ -72,25 +72,26 @@
             class="font-weight-bold text-h6"
             v-bind="attrs"
             v-on="on"
+            style="font-family: 'Handon3gyeopsal600g' !important;"
           >결과보기<v-icon color="deep-purple">mdi-align-vertical-bottom</v-icon></v-btn>
         </template>
 
         <v-card>
-          <v-card-title class="headline grey lighten-2 font-weight-bold">
+          <v-card-title class="headline grey lighten-2 font-weight-bold" style="font-family: 'Handon3gyeopsal600g' !important;">
             <v-icon x-large class="mr-2">mdi-alpha-q-circle</v-icon>{{ either.question }}
           </v-card-title>
 
-          <v-card-text class="mt-5">
+          <v-card-text class="mt-5" style="font-family: 'Handon3gyeopsal300g' !important;">
             <div v-if="choiceA.length > 0 || choiceB.length > 0">
               <div>참여자: {{ choiceA.length + choiceB.length }}명</div>
-              <div class="my-5 black--text font-weight-bold text-h6">
+              <div class="my-5 black--text font-weight-bold text-h6" style="font-family: 'Handon3gyeopsal300g' !important;">
                 <v-chip
                   color="red darken-1"
                   text-color="white"
                 >{{ either.choiceA }}</v-chip>
                 {{ (((choiceA.length)/(choiceA.length+choiceB.length))*100).toFixed(2) }}% {{ choiceA.length }}명
               </div>
-              <div class="black--text font-weight-bold text-h6">
+              <div class="black--text font-weight-bold text-h6" style="font-family: 'Handon3gyeopsal300g' !important;">
                 <v-chip
                   color="blue darken-2"
                   text-color="white"
@@ -126,6 +127,7 @@
               color="deep-purple"
               text
               @click="dialog = false"
+              style="font-family: 'Handon3gyeopsal300g' !important;"
             >
               닫기
             </v-btn>
@@ -134,7 +136,7 @@
       </v-dialog>
     </div>
     <v-divider class="my-5"></v-divider>
-    <div class="text-sm-h6 text-subtitle-2">댓글</div>
+    <div class="text-sm-h6 text-subtitle-2" style="font-family: 'Handon3gyeopsal300g' !important;">댓글</div>
     <v-form class="mt-5">
       <v-row>
         <v-col cols="6" class="py-0">
@@ -146,6 +148,7 @@
             color="green darken-2"
             item-color="green darken-2"
             v-model="commentData.choice"
+            style="font-family: 'Handon3gyeopsal300g' !important;"
           ></v-select>
         </v-col>
       </v-row>
@@ -173,7 +176,7 @@
           rows="1"
           row-height="15"
         ></v-textarea>
-        <div>
+        <div style="font-family: 'Handon3gyeopsal300g' !important;">
           <v-btn v-if="!isUpdate" @click="addComment" text class="mt-3 font-weight-bold" color="green darken-1">등록</v-btn>
           <v-btn v-else @click="updateComment" text class="mt-3 font-weight-bold" color="teal">수정</v-btn>
         </div>
@@ -337,20 +340,26 @@ export default {
       }
     },
     updateComment() {
-      axios.put(`${this.$store.state.api_server}/eithers/${this.either.id}/comments/${this.commentData.id}`, this.commentData)
-        .then(res => {
-          this.isUpdate = false
-          const idx = this.comments.findIndex(x => x.id === this.commentData.id)
-          this.comments[idx].updated_at = res.data.updated_at
-          this.comments[idx].contents = res.data.contents
-          this.comments[idx].choice = res.data.choice
-          this.commentData = {
-            contents: '',
-            writer: this.$store.state.userInfo.id,
-            either_id: this.either.id,
-            choice: null
-          }
-        })
+      if (this.commentData.contents.trim().length == 0) {
+        alert('유효한 입력이 아닙니다.')
+        this.commentData.contents = ''
+      }
+      else {
+        axios.put(`${this.$store.state.api_server}/eithers/${this.either.id}/comments/${this.commentData.id}`, this.commentData)
+          .then(res => {
+            this.isUpdate = false
+            const idx = this.comments.findIndex(x => x.id === this.commentData.id)
+            this.comments[idx].updated_at = res.data.updated_at
+            this.comments[idx].contents = res.data.contents
+            this.comments[idx].choice = res.data.choice
+            this.commentData = {
+              contents: '',
+              writer: this.$store.state.userInfo.id,
+              either_id: this.either.id,
+              choice: null
+            }
+          })
+      }
     },
   },
 }

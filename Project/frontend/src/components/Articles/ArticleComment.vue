@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div style="font-family: 'Handon3gyeopsal300g' !important;">
     <div v-if="comments.length > 0">
       <div v-for="(comment, index) in comments" :key="index" >
         <div class="d-flex justify-space-between align-center">
-          <v-btn text x-large class="pa-0 font-weight-bold" @click="goToUser(comment.writer)">
+          <v-btn text x-large class="pa-0 font-weight-bold" @click="goToUser(comment.writer)" style="font-family: 'Handon3gyeopsal600g' !important;">
             <v-icon class="mr-1" v-if="psas[comment.writer]==null">mdi-account-circle</v-icon>
             <v-avatar class="mr-1" v-else><img :src="psas[comment.writer]"></v-avatar>
             {{ users[comment.writer] }}</v-btn>
@@ -26,14 +26,14 @@
                   :key="idx"
                   @click="updateOrDeleteOrHide(comment, idx, index)"
                 >
-                  <v-list-item-title>{{ menu.title }}</v-list-item-title>
+                  <v-list-item-title style="font-family: 'Handon3gyeopsal300g' !important;">{{ menu.title }}</v-list-item-title>
                 </v-list-item>
               </v-list>
             </v-menu>
           </div>
         </div>
         <div class="mx-5">{{ comment.contents }}</div>
-        <v-divider class="mt-5"></v-divider>
+        <v-divider class="my-3"></v-divider>
       </div>  
     </div>
   </div>

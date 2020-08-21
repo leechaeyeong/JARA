@@ -52,7 +52,6 @@ public class EitherController {
 		Either either = eitherService.selectEither(id);
 		
 		if (either == null) {
-			System.out.println("ERROR: 해당하는 글이 존재하지 않습니다.");
 			return new ResponseEntity<Map<String, Object>>(HttpStatus.NOT_FOUND);
 		}
 		
@@ -103,7 +102,6 @@ public class EitherController {
 		if (partialList.size() > 0) {
 			return new ResponseEntity<List<Either>>(partialList, HttpStatus.OK);
 		} else {
-			System.out.println("투표 리스트가 존재하지 않음");
 			return new ResponseEntity<List<Either>>(partialList, HttpStatus.BAD_REQUEST);
 		}
 	}
@@ -118,9 +116,9 @@ public class EitherController {
 		}
 	}
 	
-	@ApiOperation(value = "해당하는 투표의 투표 현황 조회", response = String.class)
-	@GetMapping("/{either_id}/pick")
-	private ResponseEntity<List<EitherChoice>> selectEitherPickList(@PathVariable int either_id) {
-		return new ResponseEntity<List<EitherChoice>>(eitherService.selectEitherPickList(either_id), HttpStatus.OK);
+	@ApiOperation(value = "이더 Top 3 조회", response = String.class)
+	@GetMapping("/top3")
+	private ResponseEntity<List<Either>> selectListEitherTop3() {
+		return new ResponseEntity<List<Either>>(eitherService.selectListEitherTop3(), HttpStatus.OK);
 	}
 }

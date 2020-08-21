@@ -40,18 +40,8 @@ public class ArticleCommentServiceImpl implements ArticleCommentService {
 	}
 
 	@Override
-	public int deleteArticleComments(int article_id) {
-		return articleCommentDao.deleteArticleComments(article_id);
-	}
-
-	@Override
 	public int updateArticleCommentInvisible(int id) {
 		return articleCommentDao.updateArticleCommentInvisible(id);
-	}
-
-	@Override
-	public int updateArticleCommentVisible(int id) {
-		return articleCommentDao.updateArticleCommentVisible(id);
 	}
 
 }

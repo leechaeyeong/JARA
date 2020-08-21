@@ -16,19 +16,16 @@ public class BarterServiceImpl implements BarterService {
 
 	@Override
 	public int insertBarter(Barter barter) {
-		System.out.println("barter=" + barter);
 		return barterDao.insertBarter(barter);
 	}
 
 	@Override
 	public int updateBarter(Barter barter) {
-		System.out.println("barter=" + barter);
 		return barterDao.updateBarter(barter);
 	}
 	
 	@Override
 	public int deleteBarter(int id) {
-		System.out.println("id=" + id);
 		return barterDao.deleteBarter(id);
 	}
 
@@ -38,38 +35,17 @@ public class BarterServiceImpl implements BarterService {
 	}
 
 	@Override
-	public List<Barter> selectListBarterTag(int tag_id) {
-		System.out.println("tag_id=" + tag_id);
-		return barterDao.selectListBarterTag(tag_id);
-	}
-
-	@Override
-	public List<Barter> selectListBarterSearch(String searchWord) {
-		System.out.println("searchWord=" + searchWord);
-		return barterDao.selectListBarterSearch(searchWord);
-	}
-
-	@Override
 	public Barter selectBarter(int id) {
-		System.out.println("id=" + id);
 		return barterDao.selectBarter(id);
 	}
 
 	@Override
-	public int updateBarterHits(int id) {
-		System.out.println("id=" + id);
-		return barterDao.updateBarterHits(id);
-	}
-	
-	@Override
 	public int updateBarterStatus(HashMap<String, Object> hashMap) {
-		System.out.println("hashMap=" + hashMap);
 		return barterDao.updateBarterStatus(hashMap);
 	}
 	
 	@Override
 	public int updateBarterImgSrc(HashMap<String, Object> hashMap) {
-		System.out.println("hashMap=" + hashMap);
 		return barterDao.updateBarterImgSrc(hashMap);
 	}
 }

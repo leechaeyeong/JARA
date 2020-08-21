@@ -1,12 +1,12 @@
 <template>
-  <v-container fluid mt-5 v-if="isTaken">
+  <v-container fluid mt-5 v-if="isTaken" style="font-family: 'Handon3gyeopsal300g';">
     <div class="d-flex justify-space-between align-center">
-      <div class="d-flex align-center" v-if="psa[article.writer]==null">
+      <div class="d-flex align-center" v-if="psas[article.writer]==null">
         <v-btn text class="pa-0 font-weight-bold text-sm-h5 text-h6" @click="goToUser" x-large><v-icon x-large>mdi-account-circle</v-icon>{{ users[article.writer] }}</v-btn>      
       </div>
       <div class="d-flex align-center" v-else>
-        <v-btn text class="pa-0 font-weight-bold text-sm-h5 text-h6" @click="goToUser" x-large>
-          <v-avatar><img :src="psa[article.writer]" alt="프로필 사진"></v-avatar>
+        <v-btn text class="pa-0 font-weight-bold text-sm-h5 text-h6" @click="goToUser" x-large style="font-family: 'Handon3gyeopsal600g' !important;">
+          <v-avatar><img :src="psas[article.writer]" alt="프로필 사진"></v-avatar>
           {{ users[article.writer] }}
         </v-btn>      
       </div>
@@ -28,7 +28,7 @@
               :key="idx"
               @click="updateOrDelete(idx)"
             >
-              <v-list-item-title>{{ menu.title }}</v-list-item-title>
+              <v-list-item-title style="font-family: 'Handon3gyeopsal300g' !important;">{{ menu.title }}</v-list-item-title>
             </v-list-item>
           </v-list>
         </v-menu>
@@ -114,7 +114,7 @@ export default {
     },
     updateOrDelete(val) {
       if (this.$store.state.userInfo.id == this.article.writer) {
-        if (val == 0) { this.$router.push({ name: 'UpdateArticle', params: { article_id : val.id }}) }
+        if (val == 0) { this.$router.push({ name: 'UpdateArticle', params: { article_id : this.article.id }}) }
         else { 
           const response = confirm('정말로 삭제 하시겠습니까?')
           if (response) { 
@@ -188,17 +188,23 @@ export default {
       }
     },
     updateComment() {
-      axios.put(`${this.$store.state.api_server}/articles/${this.article.id}/comments/${this.commentData.id}`, this.commentData)
-        .then(res => {
-          const idx = this.comments.findIndex(x => x.id === this.commentData.id)
-          this.comments[idx].updated_at = res.data.updated_at
-          this.comments[idx].contents = res.data.contents
-          this.isUpdate = false
-          this.commentData = {
-            contents: '',
-            writer: this.$store.state.userInfo.id
-          }
-        })
+      if (this.commentData.contents.trim().length == 0) {
+        alert('유효한 입력이 아닙니다.')
+        this.commentData.contents = ''
+      }
+      else {
+        axios.put(`${this.$store.state.api_server}/articles/${this.article.id}/comments/${this.commentData.id}`, this.commentData)
+          .then(res => {
+            const idx = this.comments.findIndex(x => x.id === this.commentData.id)
+            this.comments[idx].updated_at = res.data.updated_at
+            this.comments[idx].contents = res.data.contents
+            this.isUpdate = false
+            this.commentData = {
+              contents: '',
+              writer: this.$store.state.userInfo.id
+            }
+          })
+      }
     },
     scrollToTop() {
       this.$vuetify.goTo(0)

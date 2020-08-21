@@ -1,73 +1,75 @@
 <template>
-  <v-container fluid mt-5 v-if="isLoad">
+  <v-container fluid mt-5 v-if="isLoad" style="font-family: 'Handon3gyeopsal300g' !important;">
     <div class="d-flex justify-space-between align-center">
-      <div class="text-sm-h3 text-h6" v-if="user.img_src==null">
+      <div class="font-weight-bold text-sm-h3 text-h6" v-if="user.img_src==null" style="font-family: 'Handon3gyeopsal600g' !important;">
         <v-icon x-large>mdi-account-circle</v-icon>
         {{ user.nickname }}
       </div>
-      <div class="text-sm-h3 text-h6" v-else>
+      <div class="text-sm-h3 text-h6 font-weight-bold" v-else style="font-family: 'Handon3gyeopsal600g' !important;">
         <v-avatar>
           <img :src="user.img_src" alt="프로필 사진">
         </v-avatar>
         {{ user.nickname }}
       </div>
-      <div class="d-flex text-sm-h6 text-subtitle-2">
-        <div>게시글 <div class="text-center"><v-btn text class="text-h6">0</v-btn></div></div>
-        <div class='ml-3'>
-          팔로워
-          <div class="text-center">
-            <v-menu offset-y>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  text
-                  class="text-h6"
-                  v-bind="attrs"
-                  v-on="on"
-                >{{ user.followerList.length }}
-                </v-btn>
-              </template>
-              <v-list v-if="user.followerList.length > 0">
-                <v-list-item
-                  v-for="(user, index) in user.followerList"
-                  :key="index"
-                >
-                  <v-list-item-title>{{ users[user] }}</v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
-          </div>
-        </div>
-        <div class="ml-3">
-          팔로잉
-          <div class="text-center">
-            <v-menu offset-y>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  text
-                  class="text-h6"
-                  v-bind="attrs"
-                  v-on="on"
-                >{{ user.followingList.length }}
-                </v-btn>
-              </template>
-              <v-list v-if="user.followingList.length > 0">
-                <v-list-item
-                  v-for="(user, index) in user.followingList"
-                  :key="index"
-                >
-                  <v-list-item-title>{{ users[user] }}</v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
-          </div>
-        </div>
-      </div>
     </div>
-    <div>
+    <div class="mt-2">
       <div class="ml-2">
         <v-icon v-if="user.sex" color="red darken-1">mdi-human-female</v-icon>
         <v-icon v-else color="blue darken-1">mdi-human-male</v-icon>
         {{ user.bio }}
+      </div>
+    </div>
+    <div class="mt-5 d-flex justify-space-around text-sm-h6 text-subtitle-2 text-center">
+      <div>게시글 <div class="text-center"><v-btn text class="text-h6" style="font-family: 'Handon3gyeopsal600g' !important;">{{ user.myArticleList.length }}</v-btn></div></div>
+      <div class='ml-3'>
+        팔로워
+        <div class="text-center">
+          <v-menu offset-y>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                text
+                class="text-h6"
+                v-bind="attrs"
+                v-on="on"
+                style="font-family: 'Handon3gyeopsal600g' !important;"
+              >{{ user.followerList.length }}
+              </v-btn>
+            </template>
+            <v-list v-if="user.followerList.length > 0">
+              <v-list-item
+                v-for="(user, index) in user.followerList"
+                :key="index"
+              >
+                <v-list-item-title style="font-family: 'Handon3gyeopsal300g' !important;">{{ users[user] }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </div>
+      </div>
+      <div class="ml-3">
+        팔로잉
+        <div class="text-center">
+          <v-menu offset-y>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                text
+                class="text-h6"
+                v-bind="attrs"
+                v-on="on"
+                style="font-family: 'Handon3gyeopsal600g' !important;"
+              >{{ user.followingList.length }}
+              </v-btn>
+            </template>
+            <v-list v-if="user.followingList.length > 0">
+              <v-list-item
+                v-for="(user, index) in user.followingList"
+                :key="index"
+              >
+                <v-list-item-title style="font-family: 'Handon3gyeopsal300g' !important;">{{ users[user] }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </div>
       </div>
     </div>
     <div class="text-right" v-if="isUser">
@@ -141,6 +143,16 @@ export default {
           this.isLoad = !this.isLoad
         })
     },
+    reGetUserData() {
+      axios.get(`${this.$store.state.api_server}/accounts/${this.$route.params.user_id}`)
+        .then(res => {
+          this.user = res.data
+          if (this.user.id == this.$store.state.userInfo.id) {this.isUser = !this.isUser}
+          if (this.user.followerList.length > 0 && this.user.followerList.includes(this.$store.state.userInfo.id)) {this.isFollow = !this.isFollow}
+          this.articles = res.data.myArticleList
+          this.scraps = res.data.scrapTipList
+        })
+    },
     updateUserInfo() {
       this.$router.push(`/accounts/${this.user.id}/info`)
     },
@@ -170,6 +182,13 @@ export default {
   },
   created() {
     this.getUserData()
+  },
+  watch: {
+    $route(to, from) {
+      if (to != from) {
+        this.reGetUserData()
+      }
+    }
   }
 }
 </script>

@@ -67,8 +67,6 @@ public class EitherCommentController {
 	@ApiOperation(value = "투표 댓글 삭제", response = String.class)
 	@DeleteMapping("/{either_id}/comments/{id}")
 	private ResponseEntity<String> deleteEitherComment(@PathVariable int id) {
-		System.out.println("id=" + id);
-		
 		if (eitherCommentService.deleteEitherComment(id) > 0) {
 			return new ResponseEntity<String>("success", HttpStatus.OK);
 		} else {

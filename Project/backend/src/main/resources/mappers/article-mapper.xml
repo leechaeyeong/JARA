@@ -16,7 +16,7 @@
 		ORDER BY created_at DESC
 	</select>
 	
-	<!-- 사용자가 작성한 전체 게시글 및 사용자가 팔로우하는 다른 사용자의 전체 게시글 -->
+	<!-- 사용자가 작성한 전체 게시글 및 사용자가 팔로우하는 다른 사용자의 전체 게시글 조회 -->
 	<select id="selectListArticle" resultType="com.ssafy.jara.dto.Article">
 		SELECT id, writer, contents, created_at, updated_at, shares, img_src
 		FROM article
@@ -26,7 +26,7 @@
 		ORDER BY created_at DESC
 	</select>
 	
-	<!-- 사용자가 작성한 전체 게시글 및 사용자가 팔로우하는 다른 사용자의 전체 게시글 idx부터 range만큼 가져오기 -->
+	<!-- 사용자가 작성한 전체 게시글 및 사용자가 팔로우하는 다른 사용자의 전체 게시글 s_idx부터 count만큼 조회 -->
 	<select id="selectRangeListArticle" resultType="com.ssafy.jara.dto.Article">
 		SELECT id, writer, contents, created_at, updated_at, shares, img_src
 		FROM article
@@ -58,45 +58,17 @@
 		WHERE id=#{id}
 	</delete>
 	
-	<!-- 게시글 공유 수 수정 -->
-	<update id="updateArticleShares">
-		UPDATE article
-		SET shares=shares+1
-		WHERE id=#{id}
-	</update>
-	
 	<!-- 게시글 좋아요 등록 -->
 	<insert id="insertArticleLike" parameterType="java.util.HashMap">
 		INSERT INTO article_like
 		VALUES (#{article_id}, #{user_id})
 	</insert>
 	
-	<!-- 사용자의 해당 게시글 좋아요 여부 확인 -->
-	<select id="selectArticleLike" parameterType="java.util.HashMap" resultType="java.lang.Integer">
-		SELECT count(*)
-		FROM article_like
-		WHERE article_id=#{article_id} AND user_id=#{user_id}
-	</select>
-	
-	<!-- 게시글 좋아요 수 조회 -->
-	<select id="selectArticleLikes" resultType="java.lang.Integer">
-		SELECT count(*)
-		FROM article_like
-		WHERE article_id=#{article_id}
-	</select>
-	
-	<!-- 사용자의 해당 게시글 좋아요 삭제 -->
+	<!-- 게시글 좋아요 삭제 -->
 	<delete id="deleteArticleLike" parameterType="java.util.HashMap">
 		DELETE
 		FROM article_like
 		WHERE article_id=#{article_id} AND user_id=#{user_id}
-	</delete>
-	
-	<!-- 게시글 좋아요 삭제 -->
-	<delete id="deleteArticleLikes">
-		DELETE
-		FROM article_like
-		WHERE article_id=#{article_id}
 	</delete>
 	
 	<!-- 게시글 좋아요 하는 사용자 전체 조회 -->

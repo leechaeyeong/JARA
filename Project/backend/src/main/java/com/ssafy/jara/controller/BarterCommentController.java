@@ -53,8 +53,6 @@ public class BarterCommentController {
 	@ApiOperation(value = "물물교환 댓글 삭제", response = String.class)
 	@DeleteMapping("/{item_id}/comments/{id}")
 	private ResponseEntity<String> deleteBarterComment(@PathVariable int id) {
-		System.out.println("id=" + id);
-		
 		if (barterCommentService.deleteBarterComment(id) > 0) {
 			return new ResponseEntity<String>("success", HttpStatus.OK);
 		} else {

@@ -1,5 +1,6 @@
 package com.ssafy.jara.service;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,6 @@ import org.springframework.stereotype.Service;
 import com.ssafy.jara.dao.AccountDao;
 import com.ssafy.jara.dto.Account;
 import com.ssafy.jara.dto.Follow;
-import com.ssafy.jara.dto.Location;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -28,14 +28,13 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	public Account selectAccount(Account account) {
-//		System.out.println("SERVICE : " + account.getEmail() + " " + account.getPassword());
 		return accountDao.selectAccount(account);
 	}
 	
-	@Override
-	public String findPassword(String email) {
-		return accountDao.findPassword(email);
-	}
+//	@Override
+//	public String findPassword(String email) {
+//		return accountDao.findPassword(email);
+//	}
 
 	@Override
 	public int duplicateCheck(Account account) {
@@ -55,11 +54,6 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public int changePassword(Account account) {
 		return accountDao.changePassword(account);
-	}
-
-	@Override
-	public Account findAccount(int id) {
-		return accountDao.findAccount(id);
 	}
 
 	@Override
@@ -88,25 +82,13 @@ public class AccountServiceImpl implements AccountService {
 	}
 	
 	@Override
-	public int deleteAllFollow(int id) {
-		return accountDao.deleteAllFollow(id);
-	}
-	
-	@Override
 	public int insertFollow(Follow follow) {
-//		System.out.println("팔로우 상태 : "+follow.isStatus());
 		return accountDao.insertFollow(follow);
 	}
 	
 	@Override
 	public int approveFollow(Follow follow) {
-//		System.out.println("팔로우 상태 : "+follow.isStatus());
 		return accountDao.approveFollow(follow);
-	}
-
-	@Override
-	public List<Follow> findAllFollow() {
-		return accountDao.findAllFollow();
 	}
 
 	@Override
@@ -121,17 +103,37 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	public List<Integer> findFollower(int following) {
-		
 		return accountDao.findFollower(following);
 	}
 
 	@Override
 	public List<Integer> findFollowing(int follower) {
-		
 		return accountDao.findFollowing(follower);
 	}
 
+	@Override
+	public int findIdByEmail(String email) {
+		return accountDao.findIdByEmail(email);
+	}
 
+	@Override
+	public int insertNaverAccount(Account account) {
+		return accountDao.insertNaverAccount(account);
+	}
 
+	@Override
+	public int updateNaverAccount(HashMap<String, Object> hashMap) {
+		return accountDao.updateNaverAccount(hashMap);
+	}
+	
+	@Override
+	public int insertKakaoAccount(Account account) {
+		return accountDao.insertKakaoAccount(account);
+	}
+
+	@Override
+	public int updateKakaoAccount(HashMap<String, Object> hashMap) {
+		return accountDao.updateKakaoAccount(hashMap);
+	}
 	
 }

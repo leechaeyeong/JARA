@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.jara.dto.Barter;
@@ -49,7 +48,6 @@ public class BarterController {
 		Barter barter = barterService.selectBarter(id);
 		
 		if (barter == null) {
-			System.out.println("ERROR: 해당하는 글이 존재하지 않습니다.");
 			return new ResponseEntity<Barter>(HttpStatus.NOT_FOUND);
 		}
 		
@@ -111,49 +109,19 @@ public class BarterController {
 		return new ResponseEntity<List<Barter>>(barterService.selectListBarter(), HttpStatus.OK);
 	}
 	
-//	@ApiOperation(value = "태그로 물물교환 조회", response = String.class)
-//	@GetMapping("/tag")
-//	private ResponseEntity<List<Barter>> selectListBarterTag(@RequestBody int tag_id) {
-//		return new ResponseEntity<List<Barter>>(barterService.selectListBarterTag(tag_id), HttpStatus.OK);
-//	}
-	
-	@ApiOperation(value = "구해요 태그 물물교환 조회", response = String.class)
-	@GetMapping("/want")
-	private ResponseEntity<List<Barter>> selectListBarterWant() {
-		return new ResponseEntity<List<Barter>>(barterService.selectListBarterTag(5), HttpStatus.OK);
-	}
-	
-	@ApiOperation(value = "사요 태그 물물교환 조회", response = String.class)
-	@GetMapping("/buy")
-	private ResponseEntity<List<Barter>> selectListBarterBuy() {
-		return new ResponseEntity<List<Barter>>(barterService.selectListBarterTag(6), HttpStatus.OK);
-	}
-	
-	@ApiOperation(value = "팔아요 태그 물물교환 조회", response = String.class)
-	@GetMapping("/sell")
-	private ResponseEntity<List<Barter>> selectListBarterSell() {
-		return new ResponseEntity<List<Barter>>(barterService.selectListBarterTag(7), HttpStatus.OK);
-	}
-	
-	@ApiOperation(value = "나눠요 태그 물물교환 조회", response = String.class)
-	@GetMapping("/share")
-	private ResponseEntity<List<Barter>> selectListBarterShare() {
-		return new ResponseEntity<List<Barter>>(barterService.selectListBarterTag(8), HttpStatus.OK);
-	}
-	
-	@ApiOperation(value = "검색어로 물물교환 조회", response = String.class)
-	@GetMapping("/search")
-	private ResponseEntity<List<Barter>> selectListBarterSearch(@RequestParam String searchWord) {
-		return new ResponseEntity<List<Barter>>(barterService.selectListBarterSearch(searchWord), HttpStatus.OK);
-	}
-	
-	@ApiOperation(value = "해당 물물교환 조회수 증가", response = String.class)
-	@PutMapping("/{id}/hits")
-	private ResponseEntity<String> updateBarterHits(@PathVariable int id) {
-		if (barterService.updateBarterHits(id) > 0) {
-			return new ResponseEntity<String>("success", HttpStatus.OK);
+	@ApiOperation(value = "물물교환 게시글 이미지 경로 저장", response = String.class)
+	@PutMapping("/{id}/img")
+	private ResponseEntity<String> updateBarterImg(@PathVariable int id, @RequestBody Barter barter) {
+		Barter originalBarter = barterService.selectBarter(id);
+		HashMap<String, Object> hashMap = new HashMap<String, Object>();
+		hashMap.put("id", id);
+		hashMap.put("img_src", barter.getImg_src());
+		hashMap.put("original_updated_at", originalBarter.getUpdated_at());
+		
+		if (barterService.updateBarterImgSrc(hashMap) > 0) {
+			return new ResponseEntity<String>(barter.getImg_src(), HttpStatus.OK);
 		} else {
-			return new ResponseEntity<String>("fail", HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 		}
 	}
 }

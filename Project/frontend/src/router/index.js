@@ -23,6 +23,9 @@ import Tips from '../views/Tips.vue'
 import TipsItemDetail from '../components/Tips/TipsItemDetail.vue'
 import NewTip from '../components/Tips/NewTip.vue'
 import PageNotFound from '../views/PageNotFound.vue'
+import SocialLogin from '../components/Accounts/SocialLogin.vue'
+import SocialLoginFirst from '../components/Accounts/SocialLoginFirst.vue'
+import LiveChat from '../views/LiveChat.vue'
 
 Vue.use(VueRouter)
 
@@ -30,7 +33,12 @@ Vue.use(VueRouter)
   {
     path: '/',
     name: 'Entrance',
-    component: Entrance
+    component: Entrance,
+    beforeEnter(to, from, next) {
+      if (Vue.$cookies.isKey('auth-token')) {
+        next({name: 'Home'})
+      } else { next() }
+    }
   },
   {
     path: '/admin',
@@ -121,6 +129,16 @@ Vue.use(VueRouter)
     path: '/accounts/certification',
     name: 'SignUpCertification',
     component: SignUpCertification
+  },
+  {
+    path: '/accounts/social/first',
+    name: 'SocialLoginFirst',
+    component: SocialLoginFirst
+  },
+  {
+    path: '/accounts/social/login',
+    name: 'SocialLogin',
+    component: SocialLogin
   },
   {
     path: '/accounts/:user_id',
@@ -247,13 +265,25 @@ Vue.use(VueRouter)
     path: '*',
     name: 'PageNotFound',
     component: PageNotFound,
+  },
+  {
+    path: '/live-chat',
+    name: 'LiveChat',
+    component: LiveChat
   }
 ]
 
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes
+  routes,
+  scrollBehavior (to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { x:0, y: 0 }
+    }
+  }
 })
 
 export default router

@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid mt-5>
+  <v-container fluid mt-5 style="font-family: 'Handon3gyeopsal300g' !important;">
     <v-form ref="form" v-model="isValid" class="px-3">  
       <div class="font-weight-bold">이메일로 받은 인증번호<v-icon class="ml-1">mdi-email</v-icon></div>
       <v-text-field

@@ -27,11 +27,15 @@ public class Account {
 	
 	private String img_src;		// 프로필 사진
 	
+	private String access_token;	// 네이버 access_token
+	private String refresh_token;	// 네이버 refresh_token
+	
 	public Account() {}
 
 	public Account(int id, String nickname, String email, String password, boolean sex, Date birthday, String location,
 			String bio, boolean status, String code, List<Integer> followerList, List<Integer> followingList,
-			List<Article> myArticleList, List<Tip> scrapTipList, String PTY, String SKY, String T1H, String img_src) {
+			List<Article> myArticleList, List<Tip> scrapTipList, String pTY, String sKY, String t1h, String img_src,
+			String access_token, String refresh_token) {
 		super();
 		this.id = id;
 		this.nickname = nickname;
@@ -47,10 +51,12 @@ public class Account {
 		this.followingList = followingList;
 		this.myArticleList = myArticleList;
 		this.scrapTipList = scrapTipList;
-		this.PTY = PTY;
-		this.SKY = SKY;
-		this.T1H = T1H;
+		PTY = pTY;
+		SKY = sKY;
+		T1H = t1h;
 		this.img_src = img_src;
+		this.access_token = access_token;
+		this.refresh_token = refresh_token;
 	}
 
 	public String getPTY() {
@@ -196,6 +202,22 @@ public class Account {
 	public void setImg_src(String img_src) {
 		this.img_src = img_src;
 	}
+	
+	public String getAccess_token() {
+		return access_token;
+	}
+
+	public void setAccess_token(String access_token) {
+		this.access_token = access_token;
+	}
+
+	public String getRefresh_token() {
+		return refresh_token;
+	}
+
+	public void setRefresh_token(String refresh_token) {
+		this.refresh_token = refresh_token;
+	}
 
 	@Override
 	public String toString() {
@@ -203,7 +225,8 @@ public class Account {
 				+ sex + ", birthday=" + birthday + ", location=" + location + ", bio=" + bio + ", status=" + status
 				+ ", code=" + code + ", followerList=" + followerList + ", followingList=" + followingList
 				+ ", myArticleList=" + myArticleList + ", scrapTipList=" + scrapTipList + ", PTY=" + PTY + ", SKY="
-				+ SKY + ", T1H=" + T1H + ", img_src=" + img_src + "]";
+				+ SKY + ", T1H=" + T1H + ", img_src=" + img_src + ", access_token=" + access_token + ", refresh_token="
+				+ refresh_token + "]";
 	}
 	
 }

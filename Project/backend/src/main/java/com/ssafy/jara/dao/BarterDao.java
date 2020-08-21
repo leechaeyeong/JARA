@@ -9,14 +9,24 @@ import com.ssafy.jara.dto.Barter;
 
 @Mapper
 public interface BarterDao {
+	// 새로운 물물교환 등록
 	public int insertBarter(Barter barter);
+	
+	// 해당 물물교환 조회
 	public Barter selectBarter(int id);
+	
+	// 해당 물물교환 수정
 	public int updateBarter(Barter barter);
+	
+	// 해당 물물교환 삭제
 	public int deleteBarter(int id);
+	
+	// 전체 물물교환 조회
 	public List<Barter> selectListBarter();
-	public List<Barter> selectListBarterTag(int tag_id);
-	public List<Barter> selectListBarterSearch(String searchWord);
-	public int updateBarterHits(int id);
+	
+	// 물물교환 상태 수정 (false(거래중)에서 true(거래완료)로 변경)
 	public int updateBarterStatus(HashMap<String, Object> hashMap);
+	
+	// 물물교환 게시글 이미지 경로 저장
 	public int updateBarterImgSrc(HashMap<String, Object> hashMap);
 }

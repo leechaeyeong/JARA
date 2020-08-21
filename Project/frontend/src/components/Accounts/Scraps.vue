@@ -6,8 +6,8 @@
         :class="{ 'on-hover': hover }"
       >
         <v-img
-          src=""
-          max-width="100%"
+          :src="scrap.img_src"
+          width="100%"
           height="150"
         >
           <v-dialog
@@ -18,9 +18,9 @@
               <div class="back" @click="dialog = true" v-bind="attrs" v-on="on"></div>
             </template>
 
-            <v-card>
+            <v-card style="font-family: 'Handon3gyeopsal300g' !important;">
               <v-card-title class="headline d-flex align-center justify-space-between">
-                <div>
+                <div style="font-family: 'Handon3gyeopsal600g' !important;">
                   <v-icon v-if="psas[scrap.writer]==null" class="mr-1">mdi-account-circle</v-icon>
                   <v-avatar v-else class="mr-1"><img :src="psas[scrap.writer]"></v-avatar>
                   {{ users[scrap.writer] }}
@@ -39,14 +39,14 @@
                     <v-list-item
                       @click="goToArticle(scrap.id)"
                     >
-                      <v-list-item-title>{{ menu }}</v-list-item-title>
+                      <v-list-item-title style="font-family: 'Handon3gyeopsal300g' !important;">{{ menu }}</v-list-item-title>
                     </v-list-item>
                   </v-list>
                 </v-menu>
               </v-card-title>
 
-              <v-card-text>
-                <v-img aspect-ratio="1" width="100%" height="auto" contain src=""></v-img>
+              <v-card-text style="font-family: 'Handon3gyeopsal300g' !important;">
+                <v-img :src="scrap.img_src" width="100%" height="300"></v-img>
                 <div class="font-weight-bold">{{ scrap.title }}</div>
                 <div class="text-truncate mt-2">{{ scrap.contents }}</div>
                 <div class="d-flex mt-3">

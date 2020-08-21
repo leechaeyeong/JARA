@@ -1518,3 +1518,725 @@ input {
 
 -----
 
+
+
+### :feet: 20.08.13
+
+##### Tips 이미지 업로드 기능 구현
+
+##### Spring Boot와 Vue.js를 연동해서 소켓 통신 실시간 채팅 구현
+
+> WebSocketConfig.java
+
+```b
+package com.ssafy.jara.common.chating;
+
+import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
+import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
+import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
+import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+
+@Configuration
+@EnableWebSocket
+@EnableWebSocketMessageBroker
+public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+	// 생성한 구현체 등록
+	
+	// Vue.js로 구현한 채팅
+	// 클라이언트가 메시지를 구독할 endpoint 정의
+	@Override
+	public void configureMessageBroker(MessageBrokerRegistry registry) {
+		registry.enableSimpleBroker("/send");
+	}
+	
+	// Connection을 맺을 때, CORS 허용
+	@Override
+	public void registerStompEndpoints(StompEndpointRegistry registry) {
+		registry.addEndpoint("/").setAllowedOrigins("*").withSockJS();
+	}
+
+}
+```
+
+> Socket.java
+
+```b
+package com.ssafy.jara.common.chating;
+
+public class Socket {
+	private String userName;
+	private String content;
+
+	public Socket() {}
+
+	public Socket(String userName, String content) {
+		super();
+		this.userName = userName;
+		this.content = content;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	@Override
+	public String toString() {
+		return "Socket [userName=" + userName + ", content=" + content + "]";
+	}
+
+}
+```
+
+> SocketHandler
+
+```b
+package com.ssafy.jara.common.chating;
+
+import java.util.HashMap;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.springframework.stereotype.Component;
+import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.handler.TextWebSocketHandler;
+
+@Component
+public class SocketHandler extends TextWebSocketHandler {
+	// TextWebSocketHandler는 handleTextMessage를 실행시킴
+	// 메시지 타입에 따라서 handleBinaryMessage 또는 handleTextMessage 실행
+
+	HashMap<String, WebSocketSession> sessionMap = new HashMap<>(); // 웹소켓 세션을 담아둘 맵
+	
+	// 메시지 발송 시 실행
+	@Override
+	public void handleTextMessage(WebSocketSession session, TextMessage message) {
+		String msg = message.getPayload(); // message.getPayload()로 메시지 전송받음
+		JSONObject obj = JsonToObjectParser(msg); // JSON형태로 전송된 메시지 파싱
+		
+		for(String key : sessionMap.keySet()) {
+			WebSocketSession wss = sessionMap.get(key);
+			try {
+				wss.sendMessage(new TextMessage(obj.toJSONString()));
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	// 웹소켓 연결 시 동작
+	@SuppressWarnings("unchecked")
+	@Override
+	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+		super.afterConnectionEstablished(session);
+		sessionMap.put(session.getId(), session);
+		
+		JSONObject obj = new JSONObject();
+		obj.put("type", "getId"); // 발신메시지의 타입
+		obj.put("sessionId", session.getId()); // 생성된 세션 Id
+		
+		session.sendMessage(new TextMessage(obj.toJSONString()));
+	}
+	
+	// 웹소켓 종료 시 동작
+	@Override
+	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+		sessionMap.remove(session.getId());
+		super.afterConnectionClosed(session, status);
+	}
+	
+	// JSON 파싱
+	private static JSONObject JsonToObjectParser(String jsonStr) {
+		JSONParser parser = new JSONParser();
+		JSONObject obj = null;
+		
+		try {
+			obj = (JSONObject) parser.parse(jsonStr);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		return obj;
+	}
+}
+```
+
+> SocketController.java
+
+```b
+package com.ssafy.jara.common.chating;
+
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.stereotype.Controller;
+
+@Controller
+public class SocketController {
+
+	@MessageMapping("/receive")
+	@SendTo("/send")
+	
+	public Socket SocketHandler(Socket socket) {
+		String userName = socket.getUserName();
+		String content = socket.getContent();
+		
+		Socket result = new Socket(userName, content);
+		
+		return result;
+	}
+}
+```
+
+> App.vue
+
+```bash
+<template>
+  <div id="container">
+    <div id="app">
+      유저이름 :
+      <input
+        v-model="userName"
+        type="text"
+      >
+      내용 : 
+      <input
+        v-model="message"
+        type="text"
+        @keyup="sendMessage"
+      >
+      <div id="dialog"
+        v-for="(item, idx) in recvList"
+        :key="idx"
+      >
+        <div id="line">
+          <h6 v-if="item.userName == userName" id="me">{{item.userName}}  {{item.content}}</h6>
+          <h6 v-else id="other">{{item.userName}}  {{item.content}}</h6>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import Stomp from 'webstomp-client'
+import SockJS from 'sockjs-client'
+
+export default {
+  name: 'App',
+  data() {
+    return {
+      userName: "",
+      message: "",
+      recvList: [],
+      me: ""
+    }
+  },
+  created() {
+    // App.vue 생성되면 소켓 연결 시도
+    this.connect()
+  },
+  methods: {
+    sendMessage(e) {
+      if(e.keyCode === 13 && this.userName !== '' && this.message !== '') {
+        this.send()
+        this.message = ''
+      }
+    },
+    send() {
+      console.log("Send message: " + this.message)
+
+      if(this.stompClient && this.stompClient.connected) {
+        const msg = {
+          userName: this.userName,
+          content: this.message
+        };
+        this.stompClient.send("/receive", JSON.stringify(msg), {});
+      }
+    },
+    connect() {
+      const serverURL = "http://localhost:8081"
+      let socket = new SockJS(serverURL);
+      this.stompClient = Stomp.over(socket);
+
+      console.log('소켓 연결 시도. 서버 주소: ${serverURL}')
+      
+      this.stompClient.connect (
+        {},
+        frame => {
+          this.connected  = true;
+
+          console.log('소켓 연결 성공', frame);
+          
+          // 서버 메시지 전송 endpoint 구독
+          // pub sub 구조
+          this.stompClient.subscribe("/send", res => {
+            console.log('구독으로 받은 메시지', res.body);
+            
+            this.recvList.push(JSON.parse(res.body))
+          });
+        },
+        error => {
+          // 소켓 연결 실패
+          console.log('소켓 연결 실패', error);
+          this.connected = false;
+        }
+      );
+    }
+  }  
+}
+</script>
+
+<style>
+#container {
+  width: auto;
+  height: auto;
+}
+
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+}
+
+#dialog {
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+#line {
+  width: 100%;
+  height: 20px;
+  float: none;
+}
+
+h6 {
+  padding: 0;
+  margin: 0;
+}
+
+h6#me {
+  float: right;
+  width: 40%;
+}
+
+h6#other {
+  float: left;
+  width: 40%;
+}
+
+#nav {
+  padding: 30px;
+}
+
+#nav a {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+#nav a.router-link-exact-active {
+  color: #42b983;
+}
+</style>
+
+```
+
+-----
+
+
+
+### :feet: 20.08.15
+
+##### Tips 태그마다 다른 자라 기본 이미지 설정
+
+| 요리 자라                                                    | 세탁 자라                                                    | 청소 자라                                                    | 보관 자라                                                    |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| ![KakaoTalk_20200813_150605789](C:\Users\multicampus\Documents\카카오톡 받은 파일\KakaoTalk_20200813_150605789.png) | ![KakaoTalk_20200813_150605608](C:\Users\multicampus\Documents\카카오톡 받은 파일\KakaoTalk_20200813_150605608.png) | ![KakaoTalk_20200813_150605423](C:\Users\multicampus\Documents\카카오톡 받은 파일\KakaoTalk_20200813_150605423.png) | ![KakaoTalk_20200813_150605270](C:\Users\multicampus\Documents\카카오톡 받은 파일\KakaoTalk_20200813_150605270.png) |
+
+##### Accounts 프로필 이미지 기능 추가
+
+##### 네이버 로그인 (네아로) api 이용 소셜 로그인 구현
+
+```b
+@ApiOperation(value = "네이버 로그인")
+	@GetMapping("/signin/naver")
+	private ResponseEntity<String> loginNaver() throws UnsupportedEncodingException {
+		String clientId = "y_9J6LuNu9tyN5tgnmEN";
+//		String redirectURI = URLEncoder.encode("https://i3a308.p.ssafy.io/accounts/signin/naver/access", "UTF-8");
+		String redirectURI = URLEncoder.encode("http://localhost:8081/jara/accounts/signin/naver/access", "UTF-8");
+		SecureRandom random = new SecureRandom();
+		String state = new BigInteger(130, random).toString();
+		String apiURL = "https://nid.naver.com/oauth2.0/authorize?response_type=code";
+		apiURL += "&client_id=" + clientId;
+		apiURL += "&redirect_uri=" + redirectURI;
+		apiURL += "&state=" + state;
+		
+		System.out.println(apiURL);
+		
+		return new ResponseEntity<String>(apiURL, HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "네이버 로그인 접근 토큰")
+	@GetMapping("/signin/naver/access")
+	private ResponseEntity<Account> accessTokenNaver(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+		String clientId = "y_9J6LuNu9tyN5tgnmEN";// 애플리케이션 클라이언트 아이디값";
+		String clientSecret = "8bMro7T5Dt";// 애플리케이션 클라이언트 시크릿값";
+		String code = request.getParameter("code");
+		String state = request.getParameter("state");
+//		String redirectURI = URLEncoder.encode("https://i3a308.p.ssafy.io/accounts/signin/naver", "UTF-8");
+		String redirectURI = URLEncoder.encode("http://localhost:8081/jara/signin/naver", "UTF-8");
+		String apiURL;
+		apiURL = "https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&";
+		apiURL += "client_id=" + clientId;
+		apiURL += "&client_secret=" + clientSecret;
+		apiURL += "&redirect_uri=" + redirectURI;
+		apiURL += "&code=" + code;
+		apiURL += "&state=" + state;
+		
+		String access_token = "";
+		String refresh_token = "";
+		
+		try {
+			URL url = new URL(apiURL);
+			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			con.setRequestMethod("GET");
+			int responseCode = con.getResponseCode();
+			BufferedReader br;
+			
+			System.out.println("responseCode=" + responseCode);
+			
+			if (responseCode == 200) { // 정상 호출
+				br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+			} else { // 에러 발생
+				br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+			}
+			
+			String inputLine;
+			StringBuffer res = new StringBuffer();
+			
+			while ((inputLine = br.readLine()) != null) {
+				res.append(inputLine);
+			}
+			br.close();
+			
+			if (responseCode == 200) {
+				JSONParser parser = new JSONParser();
+				JSONObject obj = (JSONObject) parser.parse(res.toString());
+				access_token = (String) obj.get("access_token");
+				refresh_token = (String) obj.get("refresh_token");
+				
+				// 회원 프로필 조회
+				String header = "Bearer " + access_token; // Bearer 다음에 공백 추가
+
+				apiURL = "https://openapi.naver.com/v1/nid/me";
+
+				Map<String, String> requestHeaders = new HashMap<>();
+				requestHeaders.put("Authorization", header);
+				String responseBody = get(apiURL, requestHeaders);
+
+				JSONObject resBody = (JSONObject)parser.parse(responseBody);
+				JSONObject resObj = (JSONObject) resBody.get("response");
+				
+				String nickname = URLDecoder.decode((String) resObj.get("nickname"));
+				String sex = (String) resObj.get("gender");
+				String email = (String) resObj.get("email");
+				String birthday = (String) resObj.get("birthday");
+				
+				System.out.println(nickname + " " + sex + " " + email + " " + birthday);
+				
+				if(accountService.findEmail(email) > 0) {
+					Account account = accountService.findPartAccount(accountService.findIdByEmail(email));
+					
+					if(!account.equals(null)) {
+						String token = jwtService.create(account);
+						response.setHeader("jwt-auth-token", token);
+					}
+					
+					return new ResponseEntity<Account>(account, HttpStatus.OK); // 처음 소셜 로그인 사용자가 아닌 경우
+				} 
+				
+				Account account = new Account();
+				account.setNickname(nickname);
+				account.setSex(sex.equals("F") ? true : false);
+				account.setEmail(email);
+				account.setAccess_token(access_token);
+				account.setRefresh_token(refresh_token);
+				
+				accountService.insertNaverAccount(account);
+				
+				Account resultAccount = accountService.findPartAccount(account.getId());
+				
+				return new ResponseEntity<Account>(resultAccount, HttpStatus.OK); // 처음 소셜 로그인 사용자인 경우 -> 지역 입력 페이지로 가야한다!!!!!!
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		
+		return new ResponseEntity<Account>(HttpStatus.BAD_REQUEST);
+	}
+	
+	@ApiOperation(value = "네이버 로그인으로 회원가입 시 주소 수정")
+	@PutMapping("/signin/naver/access")
+	private ResponseEntity<Account> updateNaverAccount(Account account) {
+		HashMap<String, Object> hashMap = new HashMap<String, Object>();
+		hashMap.put("id", account.getId());
+		hashMap.put("location", account.getLocation());
+		
+		if(accountService.updateNaverAccount(hashMap) > 0) {
+			return new ResponseEntity<Account>(accountService.findPartAccount(account.getId()), HttpStatus.OK);
+		}
+		
+		return new ResponseEntity<Account>(HttpStatus.NO_CONTENT);
+	}
+	
+	
+	/* 네이버 회원 프로필 조회에 필요한 메서드 */
+	private static String get(String apiUrl, Map<String, String> requestHeaders) {
+		HttpURLConnection con = connect(apiUrl);
+		try {
+			con.setRequestMethod("GET");
+			for (Map.Entry<String, String> header : requestHeaders.entrySet()) {
+				con.setRequestProperty(header.getKey(), header.getValue());
+			}
+
+			int responseCode = con.getResponseCode();
+			if (responseCode == HttpURLConnection.HTTP_OK) { // 정상 호출
+				return readBody(con.getInputStream());
+			} else { // 에러 발생
+				return readBody(con.getErrorStream());
+			}
+		} catch (IOException e) {
+			throw new RuntimeException("API 요청과 응답 실패", e);
+		} finally {
+			con.disconnect();
+		}
+	}
+
+	private static HttpURLConnection connect(String apiUrl) {
+		try {
+			URL url = new URL(apiUrl);
+			return (HttpURLConnection) url.openConnection();
+		} catch (MalformedURLException e) {
+			throw new RuntimeException("API URL이 잘못되었습니다. : " + apiUrl, e);
+		} catch (IOException e) {
+			throw new RuntimeException("연결이 실패했습니다. : " + apiUrl, e);
+		}
+	}
+
+	private static String readBody(InputStream body) {
+		InputStreamReader streamReader = new InputStreamReader(body);
+
+		try (BufferedReader lineReader = new BufferedReader(streamReader)) {
+			StringBuilder responseBody = new StringBuilder();
+
+			String line;
+			while ((line = lineReader.readLine()) != null) {
+				responseBody.append(line);
+			}
+
+			return responseBody.toString();
+		} catch (IOException e) {
+			throw new RuntimeException("API 응답을 읽는데 실패했습니다.", e);
+		}
+	}
+```
+
+-----
+
+
+
+### :feet: 20.08.15 ~ 20.08.16
+
+##### 네이버 소셜 로그인
+
+> 백과 프론트 연동 성공
+>
+> 네아로 검수 요청
+>
+> AWS 서버에 올려서 연동 성공
+
+##### 실시간 채팅
+
+> 백과 프론트 소켓 통신 성공
+>
+> AWS 서버에 올려서 통신 성공
+>
+> Swagger와 충돌나던 SocketConfig 문제 해결
+
+```b
+package com.ssafy.jara.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
+import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
+import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+
+import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+@Configuration
+@EnableSwagger2
+@EnableWebSocketMessageBroker
+public class SwaggerSocketConfig implements WebSocketMessageBrokerConfigurer {
+
+	@Bean
+	public Docket postsApi() {
+		return new Docket(DocumentationType.SWAGGER_2)
+				.groupName("SSAFY_JARA")
+				.apiInfo(apiInfo())
+				.select()
+				.apis(RequestHandlerSelectors.basePackage("com.ssafy.jara.controller"))
+				.paths(PathSelectors.ant("/**"))
+				.build();
+	}
+
+	private ApiInfo apiInfo() {
+		return new ApiInfoBuilder().title("SSAFY_JARA API")
+				.description("SSAFY_JARA API Reference for Developers")
+				.termsOfServiceUrl("https://edu.ssafy.com")
+				.license("SSAFY_JARA License")
+				.licenseUrl("ssafy_jara@ssafy.com").version("1.0").build();
+	}
+	
+	// Vue.js로 구현한 채팅
+	// 클라이언트가 메시지를 구독할 endpoint 정의
+	@Override
+	public void configureMessageBroker(MessageBrokerRegistry registry) {
+		registry.enableSimpleBroker("/send");
+	}
+
+	// Connection을 맺을 때, CORS 허용
+	@Override
+	public void registerStompEndpoints(StompEndpointRegistry registry) {
+		registry.addEndpoint("/jara").setAllowedOrigins("*").withSockJS();
+	}
+}
+```
+
+
+
+##### Tips 전체 조회 시, 댓글 목록도 함께 조회
+
+-----
+
+
+
+### :feet: 20.08.17
+
+##### Tips Top5 조회 시 댓글 목록, 스크랩 사용자 목록, 댓글수, 스크랩수 함께 조회
+
+-----
+
+
+
+### :feet: 20.08.18
+
+##### UCC 시나리오 회의
+
+> 어떤 느낌으로 촬영하면 좋을지 여러 앱 광고를 찾아봄
+>
+> - 현대카드 - 현대카드 앱
+> - 시부랄필름 - 변호사 찾아주는 앱
+>
+> 다른 팀원이 찾아온 앱 광고
+>
+> - 굿닥 앱(택시)
+> - Apple Don't blink
+>
+> 결론은 현대카드 + Apple
+>
+> - 앱 이름이 '자라'인 이유 소개
+> - 주요 기능에 대해 필요성 및 구현 화면 소개
+> - 끄트머리에 SNS 기본 기능(게시글, 채팅) 소개
+
+##### 실시간 채팅에 참여한 사용자수, 입장 및 퇴장 메시지를 설정하려고 했으나 소켓을 제대로 이해하지 못한 상태로 기능 구현을 하여서 구현하지 못함
+
+##### 빌드된 서버에서 기능 테스트 및 데이터 추가(돌아다니면서 댓글 달거나, 좋아요, 스크랩)
+
+
+
+### :sweat_smile: 어려웠던 점
+
+##### 소켓을 모르겠다. 구글링을 통해 블로그마다 어떻게 구현하였는지 정보를 수집하였으나, 비슷한듯 다르고 사용 기술 스펙이 달라서 JS를 완벽 숙지하지 못한 나에게는 어려웠다
+
+##### JS 공부해야겠다.
+
+-----
+
+
+
+### :feet: 20.08.19
+
+##### API, Method 사용하지 않는 코드 삭제 및 주석 정리
+
+##### API 문서 정리 및 Swagger 정보 정리
+
+##### UCC 1차 영상에 대한 회의
+
+##### 발표 PPT 준비
+
+> ##### DB ERD
+>
+> ![jara ERD](C:\Users\multicampus\Desktop\jara\jara ERD.png)
+>
+> ##### 간트차트
+>
+> ![image-20200819182414873](C:\Users\multicampus\AppData\Roaming\Typora\typora-user-images\image-20200819182414873.png)
+
+-----
+
+
+
+### :feet: 20.08.20
+
+##### 발표 PPT 확인
+
+##### 컨설턴트님, 코치님과 14시 50분에 팀미팅
+
+> ###### AWS 시연
+>
+> ###### 어려웠던 점, 소감 발표
+
+##### 팀원들과 마지막 소소한 이야기 나눔
+
+-----
+
+
+
+### :feet: 20.08.21
+
+##### 공통 프로젝트 마지막 날
+
+##### 최종 UCC, PPT 확인
+
+------
+
+
+
+#### :happy: 열정넘치고 배려 깊은 팀원들을 만나서 행복했던 프로젝트 끝 :happy: 
+

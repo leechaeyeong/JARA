@@ -1,6 +1,6 @@
 <template>
-  <v-container fluid class="mt-5">
-    <div class="text-sm-h3 text-h4 font-weight-bold ml-3">꼼꼼한 자라<v-icon x-large class="ml-2">mdi-chevron-down-box-outline</v-icon></div>
+  <v-container fluid class="mt-5" style="font-family: 'Handon3gyeopsal300g';">
+    <div class="text-sm-h3 text-h4 font-weight-bold ml-3" style="font-family: 'Handon3gyeopsal600g' !important;">꼼꼼한 자라<v-icon x-large class="ml-2">mdi-chevron-down-box-outline</v-icon></div>
     <div class="mt-5 ml-3">
       <v-chip
         @click="red"
@@ -43,6 +43,7 @@
           v-model="item.checked"
           color="green darken-2"
           :label="item.item"
+          :class="{ 'done' : item.checked }"
         ></v-checkbox>
       </div>
     </div>
@@ -53,6 +54,7 @@
           v-model="item.checked"
           color="green darken-2"
           :label="item.item"
+          :class="{ 'done' : item.checked }"
         ></v-checkbox>
       </div>
     </div>
@@ -63,6 +65,7 @@
           v-model="item.checked"
           color="green darken-2"
           :label="item.item"
+          :class="{ 'done' : item.checked }"
         ></v-checkbox>
       </div>
     </div>
@@ -88,10 +91,14 @@
           v-model="item.checked"
           color="green darken-2"
           :label="item.item"
+          :class="{ 'done' : item.checked }"
         ></v-checkbox>
         <v-btn @click="del(idx)" icon><v-icon>mdi-close-circle</v-icon></v-btn>
       </div>
     </div> 
+    <v-btn fab fixed small dark bottom right @click="scrollToTop" color="light-green">
+      <v-icon>mdi-apple-keyboard-control</v-icon>
+    </v-btn>
   </v-container>
 </template>
 
@@ -296,7 +303,7 @@ export default {
         }
         this.self.push(data)
         this.checkItem = ''
-        localStorage.setItem(data.id, `${data.item}: ${data.checked}`)
+        localStorage.setItem(data.id, `${data.item}:${data.checked}`)
         this.cnt++
         localStorage.setItem('custom', `${this.cnt}`)
       }
@@ -332,7 +339,8 @@ export default {
           } else {
             const result = status.split(':')
             const item = result[0]
-            const checked = result[1]
+            let checked = false
+            if (result[1] == 'true') { checked = true }
             const custom = {
               id : i,
               item: item,
@@ -342,6 +350,9 @@ export default {
           }
         }
       }
+    },
+    scrollToTop() {
+      this.$vuetify.goTo(0)
     }
   },
   created() {
@@ -356,4 +367,7 @@ export default {
 </script>
 
 <style scoped>
+  .done {
+    text-decoration: line-through;
+  }
 </style>

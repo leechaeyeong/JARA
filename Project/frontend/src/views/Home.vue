@@ -1,12 +1,12 @@
 <template>
   <v-container fluid mt-5>
-    <div class="text-center font-weight-bold text-sm-h3 text-h6">{{ date }} {{ day }}</div>
-    <div class="text-center text-sm-h6 text-subtitle-2">{{ weather.fore }}<v-icon :color="weatherIcon[weather.pic].color">mdi-{{ weatherIcon[weather.pic].icon }}</v-icon>{{ weather.back }}</div>
-    <div v-if="isPlus" class="text-center text-sm-h6 text-subtitle-2"><v-icon>mdi-{{ weather.plus.icon }}</v-icon>{{ weather.plus.tip }}</div>
+    <div class="text-center font-weight-bold text-sm-h3 text-h6" style="font-family: 'Handon3gyeopsal600g' !important;">{{ date }} {{ day }}</div>
+    <div class="text-center text-sm-h6 text-subtitle-2" style="font-family: 'Handon3gyeopsal300g' !important;">{{ weather.fore }}<v-icon :color="weatherIcon[weather.pic].color">mdi-{{ weatherIcon[weather.pic].icon }}</v-icon>{{ weather.back }}</div>
+    <div v-if="isPlus" class="text-center text-sm-h6 text-subtitle-2" style="font-family: 'Handon3gyeopsal300g' !important;"><v-icon>mdi-{{ weather.plus.icon }}</v-icon>{{ weather.plus.tip }}</div>
     <div class="mt-10 d-flex justify-center align-center">
-      <v-icon x-large v-if="userInfo.img_src==null">mdi-account-circle</v-icon>
-      <v-avatar v-else><img :src="userInfo.img_src" alt="프로필 사진"></v-avatar>
-      <v-btn text class="grey--text font-weight-bold text-sm-h5 text-body1" @click="write">어떤 이야기를 공유해 볼까요?</v-btn>
+      <v-icon x-large v-if="psas[userInfo.id]==null">mdi-account-circle</v-icon>
+      <v-avatar v-else><img :src="psas[userInfo.id]" alt="프로필 사진"></v-avatar>
+      <v-btn text class="grey--text font-weight-bold text-sm-h5 text-body1" @click="write" style="font-family: 'Handon3gyeopsal600g' !important;">어떤 이야기를 공유해 볼까요?</v-btn>
     </div>
     <v-divider class="mt-5 mb-5"></v-divider>
     <div>
@@ -17,6 +17,7 @@
             text
             class="px-0 font-weight-bold text-sm-h6"
             @click="goToUser(item.writer)"
+            style="font-family: 'Handon3gyeopsal600g' !important;"
           >
             <v-icon x-large>mdi-account-circle</v-icon>{{ users[item.writer] }}
           </v-btn>
@@ -25,6 +26,7 @@
             text
             class="px-0 font-weight-bold text-sm-h6"
             @click="goToUser(item.writer)"
+            style="font-family: 'Handon3gyeopsal600g' !important;"
           >
             <v-avatar><img :src="psas[item.writer]" alt="프로필 사진"></v-avatar>
             {{ users[item.writer] }}
@@ -49,17 +51,17 @@
                   :key="idx"
                   @click="updateOrDelete(item, idx)"
                 >
-                  <v-list-item-title>{{ menu.title }}</v-list-item-title>
+                  <v-list-item-title style="font-family: 'Handon3gyeopsal300g' !important;">{{ menu.title }}</v-list-item-title>
                 </v-list-item>
               </v-list>
             </v-menu>
           </div>
         </v-card-title>
-        <v-img v-if="item.img_src!=null" id="img" max-width="100%" height="auto" :src="item.img_src"></v-img>
-        <div class="text-subtitle-1 black--text mx-5 mt-5">
+        <v-img v-if="item.img_src!=null" id="img" max-width="100%" height="auto" :src="item.img_src" @click="goToDetail(item.id)"></v-img>
+        <div class="text-subtitle-1 black--text mx-5 mt-5" style="font-family: 'Handon3gyeopsal300g' !important;" @click="goToDetail(item.id)">
           {{ item.contents }}
         </div>
-        <div class="mx-5 pb-3 d-flex justify-end align-center">
+        <div class="mx-5 pb-3 d-flex justify-end align-center" style="font-family: 'Handon3gyeopsal300g' !important;">
           <div v-if="!isLike(item.likeAccounts)">
             <v-btn icon @click="like(item)">
               <v-icon>mdi-heart-outline</v-icon>
@@ -78,9 +80,52 @@
       </v-card>
       <div v-if="isLoad&&(articles.length < numOfArticles)" v-view="loadArticles" id="bottom"></div>
     </div>
-    <v-btn @click="scrollToTop" class="top" color="light-green" fab small dark>
-      <v-icon>mdi-apple-keyboard-control</v-icon>
-    </v-btn>
+    <v-speed-dial
+      v-model="fab"
+      bottom
+      right
+      direction="top"
+      transition="slide-y-reverse-transition"
+    >
+      <template v-slot:activator>
+        <v-btn
+          v-model="fab"
+          color="green darken-2"
+          dark
+          fab
+        >
+          <v-icon v-if="fab">mdi-close</v-icon>
+          <v-icon v-else>mdi-turtle</v-icon>
+        </v-btn>
+      </template>
+      <v-btn
+        fab
+        dark
+        small
+        color="green lighten-1"
+        @click="write"
+      >
+        <v-icon>mdi-pencil</v-icon>
+      </v-btn>
+      <v-btn
+        fab
+        dark
+        small
+        color="green lighten-2"
+        @click="goToChat"
+      >
+        <v-icon>mdi-chat</v-icon>
+      </v-btn>
+      <v-btn
+        fab
+        dark
+        small
+        color="light-green"
+        @click="scrollToTop"
+      >
+        <v-icon>mdi-apple-keyboard-control</v-icon>
+      </v-btn>
+    </v-speed-dial>
   </v-container>
 </template>
 
@@ -109,6 +154,7 @@ export default {
     return {
       isLoad: false,
       isPlus: false,
+      fab: false,
       date: `오늘은 ${this.$store.state.today.getMonth()+1}월 ${this.$store.state.today.getDate()}일`,
       day: `${this.$store.state.week[this.$store.state.today.getDay()]}요일 입니다.`,
       weather: '',
@@ -218,7 +264,7 @@ export default {
           if (response) { 
             this.articles.splice(val, 1)
             axios.delete(`${this.$store.state.api_server}/articles/${val.id}`) 
-            firebase.storage().ref().child(`images/${val.id}`).delete()
+            firebase.storage().ref().child(`articles/${val.id}`).delete()
           }
         }
       } else { alert('작성자만 사용할 수 있어요.') }
@@ -271,12 +317,15 @@ export default {
         }
         this.isPlus=true
       }
+    },
+    goToChat() {
+      this.$router.push('/live-chat')
     }
   },
   created() {
     this.fetchArticles()
     this.setWeather()
-  },  
+  },
   updated() {
     if (this.articles.length < this.numOfArticles) {
       setTimeout(() => {
@@ -296,5 +345,9 @@ export default {
 
   #bottom {
     height: 50px;
+  }
+  
+  .v-speed-dial {
+    position: fixed;
   }
 </style>

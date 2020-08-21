@@ -35,27 +35,6 @@
       ORDER BY created_at DESC;
    </select>
    
-   <!-- 태그에 해당하는 전체 물물교환 조회 -->
-   <select id="selectListBarterTag" parameterType="int" resultType="com.ssafy.jara.dto.Barter">
-      SELECT *
-      FROM item
-      WHERE tag_id=#{tag_id}
-   </select>
-   
-   <!-- 검색어에 해당하는 전체 물물교환 조회 -->
-   <select id="selectListBarterSearch" parameterType="String" resultType="com.ssafy.jara.dto.Barter">
-      SELECT *
-      FROM item
-      WHERE title like CONCAT('%', #{searchWord}, '%') or contents like CONCAT('%', #{searchWord}, '%');
-   </select>
-   
-   <!-- 물물교환 조회수 증가 -->
-   <update id="updateBarterHits" parameterType="int">
-      UPDATE item
-      SET hits=hits+1
-      WHERE id=#{id}
-   </update>
-   
    <!-- 물물교환 상태 변경 -->
    <update id="updateBarterStatus">
       UPDATE item

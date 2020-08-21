@@ -40,8 +40,6 @@ public class WeatherService {
 	// 2시간마다 실행
 	@Scheduled(cron = "0 0 0/2 * * *")
 	public void WeatherScheduled() throws IOException, ParseException {
-		log.info("Weather 정보");
-		
 		Calendar cal = Calendar.getInstance(Locale.KOREA);
         
         String year = String.valueOf(cal.get(cal.YEAR));
@@ -121,17 +119,14 @@ public class WeatherService {
 			weather = (JSONObject)parse_item.get(i);
 			
 			if(weather.get("category").equals("PTY") && weather.get("fcstTime").equals(orgTime)) {
-				log.info(weather.get("category") + " / " + weather.get("fcstTime") + " / " + weather.get("fcstValue"));
 				location.setPTY(PTYCode[Integer.parseInt((String) weather.get("fcstValue"))]); // PTY 정보 추출
 			}
 			
 			if(weather.get("category").equals("SKY") && weather.get("fcstTime").equals(orgTime)) {
-				log.info(weather.get("category") + " / " + weather.get("fcstTime") + " / " + weather.get("fcstValue"));
 				location.setSKY(SKYCode[Integer.parseInt((String)weather.get("fcstValue"))]); // SKY 정보 추출
 			}
 			
 			if(weather.get("category").equals("T1H") && weather.get("fcstTime").equals(orgTime)) {
-				log.info(weather.get("category") + " / " + weather.get("fcstTime") + " / " + weather.get("fcstValue"));
 				location.setT1H((String) weather.get("fcstValue")); // T1H 정보 추출
 			}
 		}

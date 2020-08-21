@@ -17,25 +17,21 @@ public class EitherServiceImpl implements EitherService {
 
 	@Override
 	public int insertEither(Either either) {
-		System.out.println("either=" + either);
 		return eitherDao.insertEither(either);
 	}
 
 	@Override
 	public Either selectEither(int id) {
-		System.out.println("id=" + id);
 		return eitherDao.selectEither(id);
 	}
 
 	@Override
 	public int updateEither(int id) {
-		System.out.println("id=" + id);
 		return eitherDao.updateEither(id);
 	}
 	
 	@Override
 	public int deleteEither(int id) {
-		System.out.println("id=" + id);
 		return eitherDao.deleteEither(id);
 	}
 
@@ -65,25 +61,21 @@ public class EitherServiceImpl implements EitherService {
 	
 	@Override
 	public int pickEither(EitherChoice eitherChoice) {
-		System.out.println("eitherChoice=" + eitherChoice);
 		return eitherDao.pickEither(eitherChoice);
 	}
 	
 	@Override
-	public List<EitherChoice> selectEitherPickList(int either_id) {
-		System.out.println("either_id=" + either_id);
-		return eitherDao.selectEitherPickList(either_id);
-	}
-	
-	@Override
 	public List<Integer> selectChoiceAList(int either_id) {
-		System.out.println("either_id=" + either_id);
 		return eitherDao.selectChoiceAList(either_id);
 	}
 	
 	@Override
 	public List<Integer> selectChoiceBList(int either_id) {
-		System.out.println("either_id=" + either_id);
 		return eitherDao.selectChoiceBList(either_id);
+	}
+
+	@Override
+	public List<Either> selectListEitherTop3() {
+		return eitherDao.selectListEitherTop3();
 	}
 }

@@ -8,13 +8,6 @@
       VALUES (#{reporter_id}, #{accused_nickname}, #{contents});
    </insert>
    
-   <!-- 3회 이상 신고자 확인 -->
-   <select id="countReport" resultType="java.lang.Integer">
-		SELECT count(*)
-		FROM report
-		WHERE accused_nickname=#{accused_nickname}
-   </select>
-   
    <!-- 닉네임에 해당하는 유저 찾기 -->
    <select id="findAccusedId" resultType="java.lang.Integer">
 		SELECT id 
@@ -24,9 +17,20 @@
 							WHERE accused_nickname=#{accused_nickname})
    </select>
    
+   <!-- 신고자 id 값으로 닉네임 찾기 -->
+   <select id="findNickname" resultType="java.lang.String">
+		SELECT nickname
+		FROM user
+		WHERE id = (SELECT reporter_id 
+					FROM report
+					WHERE reporter_id = #{reporter_id})
+   </select>
+   
    <!-- 신고수 내림차순, 닉네임 오름차순으로 전체 신고 조회 -->
    <select id="selectListReport" resultType="com.ssafy.jara.dto.Report">
-   		SELECT *
+   		SELECT *, (SELECT nickname
+   				   FROM user AS u
+   				   WHERE a.reporter_id=u.id) AS reporter_nickname 
 		FROM report AS a
 		ORDER BY (SELECT COUNT(reporter_id) 
 				  FROM report AS b 

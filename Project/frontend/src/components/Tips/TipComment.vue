@@ -1,21 +1,20 @@
 <template>
-  <v-container grid-list-xs>
+  <v-container grid-list-xs style="font-family: 'Handon3gyeopsal300g' !important;">
     <v-layout column>
         <v-card flat style='padding:0' class='comments'>
-          <v-card-title class="grey--text pb-1">
-            {{ users[comment.writer] }} · <span v-if="!comment.updated_at">{{comment.created_at | filterCreated}}</span>
-            <span v-else>{{comment.updated_at | filterCreated}} <p style="font-size: x-small; display: inline-block; margin: 0;">(수정됨)</p></span>
-            <v-spacer></v-spacer>
-              <v-btn v-if="$store.state.userInfo.id === comment.writer" @click="flagComment" text small color="primary">수정</v-btn>
-              <v-btn v-if="$store.state.userInfo.id === comment.writer" @click="deleteComment" text small color="error">삭제</v-btn>
+          <v-card-title class="pb-1">
+            <v-icon v-if="psas[comment.writer]==null" x-large>mdi-account-circle</v-icon>
+            <v-avatar v-else><img :src="psas[comment.writer]"></v-avatar>
+            {{ users[comment.writer] }} · <span class="grey--text" v-if="!comment.updated_at">{{comment.created_at | filterCreated}}</span>
+            <span v-else class="grey--text">{{comment.updated_at | filterCreated}} <p style="font-size: x-small; display: inline-block; margin: 0;" class="grey--text">(수정됨)</p></span>
           </v-card-title>
-          <v-card-text v-if="!isChange" class='pt-0 pb-0'> {{ comment.contents }} </v-card-text>
+          <v-card-text v-if="!isChange" class='pt-0 pb-0 black--text'> {{ comment.contents }} </v-card-text>
           <v-card-text v-if="isChange" class='pt-0 pb-0'>
             <v-text-field
               ref="contents"
+              color="green darken-2"
               v-model="change_comment.contents"
-              label="Content"
-              placeholder="수정할 댓글을 입력해 주세요."
+              label="댓글"
               required
               @keyup.enter="updateComment"
             ></v-text-field>
@@ -23,6 +22,10 @@
           <v-card-actions class='pr-3'>
             <!-- <v-btn small flat><v-icon left dark class='mr-2'>favorite_border</v-icon> 좋아요({{c.net_votes}})</v-btn> -->
             <v-spacer></v-spacer>
+            <v-row justify="end">
+              <v-btn v-if="$store.state.userInfo.id === comment.writer" @click="flagComment" text small color="primary" class="pr-1">수정</v-btn>
+              <v-btn v-if="$store.state.userInfo.id === comment.writer" @click="deleteComment" text small color="error" class="px-1">삭제</v-btn>
+            </v-row>
           </v-card-actions>
           <v-divider></v-divider>
         </v-card>
@@ -94,6 +97,7 @@ export default {
     ...mapState([
       'userInfo',
       'users',
+      'psas'
     ])
   }
 }

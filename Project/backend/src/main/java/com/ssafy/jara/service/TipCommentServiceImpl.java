@@ -39,9 +39,4 @@ public class TipCommentServiceImpl implements TipCommentService {
 		return tipCommentDao.deleteTipComment(id);
 	}
 
-	@Override
-	public int deleteTipComments(int tip_id) {
-		return tipCommentDao.deleteTipComments(tip_id);
-	}
-
 }

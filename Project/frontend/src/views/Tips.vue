@@ -1,19 +1,64 @@
 <template>
-  <v-container fluid style="potition: relative">
+  <v-container fluid style="potition: relative; font-family: 'Handon3gyeopsal300g' !important;">
     <div class="mt-5">
-      <div class="mx-3 font-weight-bold text-center text-sm-h3 text-h4">
-        꿀 Tips
+      <div class="mx-3 font-weight-bold text-sm-h3 text-h4" style="font-family: 'Handon3gyeopsal600g' !important;">
+        유익한 자라
+        <v-icon x-large>mdi-lightbulb-outline</v-icon>
       </div>
       <div>
-        <v-flex class="sm6 offset-sm3 justify-center">
+        <v-flex class="sm6 offset-sm3 justify-center mt-5">
           <v-text-field
-            label="Search Tips..."
+            label="검색어를 입력해주세요."
             v-model="search"
-            class="col-12"
+            class="col-12 px-3"
+            outlined
+            append-icon="mdi-magnify"
+            color="green darken-2"
           >
           </v-text-field>
         </v-flex>
       </div>
+      <div v-if="!search" class="mx-3 font-weight-bold text-sm-h4 text-h5">인기 팁<v-icon color="yellow">mdi-sparkles</v-icon></div>
+      <v-container v-if="!search" d-flex justify="center" align="center" class="pt-0">
+        <v-slide-group
+          class="pa-0"
+          active-class="success"
+          :show-arrows="false"
+        >
+          <v-slide-item
+            v-for="(top, i) in top5"
+            :key="i"
+          >
+            <v-card
+              class="ma-4"
+              height="200"
+              width="150"
+              @click="goToDetail(top.id)"
+            >
+              <v-img
+                id="img"
+                v-if="top.img_src!=null"
+                class="white--text align-end"
+                :src="top.img_src"
+                height="120"
+                width="100%"
+              >
+              </v-img>
+              <v-card-title class="py-1"><p class="text-truncate box mb-0">{{ top.title }}</p></v-card-title>
+              <v-container py-0><v-divider></v-divider></v-container>
+              <div class="d-flex justify-space-around">
+                <div>
+                  <v-btn icon><v-icon>mdi-heart-outline</v-icon></v-btn>{{ top.likes }}
+                </div>
+                <div>
+                  <v-btn icon><v-icon>mdi-bookmark</v-icon></v-btn>{{ top.scraps }}
+                </div>
+              </div>
+            </v-card>
+          </v-slide-item>
+        </v-slide-group>
+      </v-container>
+      <v-divider></v-divider>
       <div align="center" justify="center">
         <TipsItem
           v-for="(tip, index) in calData"
@@ -21,14 +66,55 @@
           :tip="tip"
         />
         <v-pagination
+          class="pt-2"
           v-model="curPageNum"
-          :length="numOfPages">
+          :length="numOfPages"
+          color="green darken-2"
+          total-visible="7"
+          light
+        >
         </v-pagination>
       </div>
-      <v-btn @click="write" style="position: fixed; bottom:3vh; right: 3vh" color="primary" fab small dark absolute bottom right>
+    </div>
+    <div class="pb-16"></div>
+    <v-speed-dial
+      v-model="fab"
+      fixed
+      bottom
+      right
+      direction="top"
+      transition="slide-y-reverse-transition"
+    >
+      <template v-slot:activator>
+        <v-btn
+          v-model="fab"
+          color="green darken-2"
+          dark
+          fab
+        >
+          <v-icon v-if="fab">mdi-close</v-icon>
+          <v-icon v-else>mdi-turtle</v-icon>
+        </v-btn>
+      </template>
+      <v-btn
+        fab
+        dark
+        small
+        color="green lighten-1"
+        @click="write"
+      >
         <v-icon>mdi-pencil</v-icon>
       </v-btn>
-    </div>
+      <v-btn
+        fab
+        dark
+        small
+        color="light-green"
+        @click="scrollToTop"
+      >
+        <v-icon>mdi-apple-keyboard-control</v-icon>
+      </v-btn>
+    </v-speed-dial>
   </v-container>
 </template>
 
@@ -50,21 +136,30 @@ export default {
       search: '',
       tipPerPage: 5,
       curPageNum: 1,
+      serPageNum: 1,
+      top5: [],
+      fab: false,
     }
   },
   created() {
     axios.get(`${this.$store.state.api_server}/tips/`)
       .then(res => {
-        // console.log(res.data)
         this.tips = _.orderBy(res.data, 'id', 'desc')
       })
-      .catch(err => {
-        console.log(err)
+    axios.get(`${this.$store.state.api_server}/tips/top5`)
+      .then(res => {
+        this.top5 = res.data
       })
   },
   methods: {
     write() {
       this.$router.push('/tips/new')
+    },
+    goToDetail(id) {
+      this.$router.push(`/tips/${id}`)
+    },
+    scrollToTop() {
+      this.$vuetify.goTo(0)
     }
   },
   computed: {
@@ -94,8 +189,7 @@ export default {
 
 <style scoped>
  .box {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+   font-size: 0.8em;
+   font-weight: bold;
  }
 </style>

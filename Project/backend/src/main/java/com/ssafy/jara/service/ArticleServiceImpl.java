@@ -22,13 +22,12 @@ public class ArticleServiceImpl implements ArticleService {
 
 	@Override
 	public List<Article> selectListMyArticle(int writer) {
-		
 		return articleDao.selectListMyArticle(writer);
 	}
 	
 	@Override
-	public List<Article> selectListArticle(int user_id) {
-		return articleDao.selectListArticle(user_id);
+	public List<Article> selectListArticle(int writer) {
+		return articleDao.selectListArticle(writer);
 	};
 	
 	@Override
@@ -42,11 +41,6 @@ public class ArticleServiceImpl implements ArticleService {
 	}
 	
 	@Override
-	public int selectArticleLikes(int article_id) {
-		return articleDao.selectArticleLikes(article_id);
-	};
-
-	@Override
 	public int updateArticle(Article article) {
 		return articleDao.updateArticle(article);
 	}
@@ -57,28 +51,13 @@ public class ArticleServiceImpl implements ArticleService {
 	}
 	
 	@Override
-	public int updateArticleShares(int id) {
-		return articleDao.updateArticleShares(id);
-	}
-
-	@Override
 	public int insertArticleLike(HashMap<String, Integer> hashMap) {
 		return articleDao.insertArticleLike(hashMap);
 	}
 
 	@Override
-	public int selectArticleLike(HashMap<String, Integer> hashMap) {
-		return articleDao.selectArticleLike(hashMap);
-	}
-
-	@Override
 	public int deleteArticleLike(HashMap<String, Integer> hashMap) {
 		return articleDao.deleteArticleLike(hashMap);
-	}
-
-	@Override
-	public int deleteArticleLikes(int article_id) {
-		return articleDao.deleteArticleLikes(article_id);
 	}
 
 	@Override
