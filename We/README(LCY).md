@@ -34,7 +34,7 @@
   >
   > * 구글 이메일 : lcy00707@gmail | 비밀번호 : ssafy1234 | property에 사용중인 비밀번호 : yguphiqgtiwcblae : 구글 2차 인증 코드 
   >
-  > * ![image-20200803204011691](C:\Users\multicampus\AppData\Roaming\Typora\typora-user-images\image-20200803204011691.png)
+  > * ![image-20200803204011691](/leechaeyeong/SSAFY2/img/image-20200803204011691.png)
 
 * 오늘의 깃오류 : PULL PUSH 충돌 오류
 
